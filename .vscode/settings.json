@@ -1,0 +1,8 @@
+{
+    "amazonQ.importRecommendationForInlineCodeSuggestions": false,
+    "amazonQ.showInlineCodeSuggestionsWithCodeReferences": false,
+    "amazonQ.allowFeatureDevelopmentToRunCodeAndTests": {
+        
+    }
+  
+}
