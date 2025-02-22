@@ -1,9 +1,18 @@
 import java.util.Scanner;
+import java.io.IOException;
 
 public class Caviar {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        TaskList taskList = new TaskList();
+        Storage storage = new Storage("data/tasks.txt");
+        TaskList taskList;
+
+        try {
+            taskList = new TaskList(storage); // Try loading tasks from storage
+        } catch (IOException e) {
+            System.out.println("Roe..? Error loading tasks.");
+            taskList = new TaskList(); // Fallback TaskList with no storage dependency
+        }
 
         System.out.println("Hello! I'm Caviar. Roe!");
         System.out.println("What can I do for you?");
