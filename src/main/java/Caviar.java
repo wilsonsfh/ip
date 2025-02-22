@@ -1,34 +1,31 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Caviar {
     public static void main(String[] args) {
-        String inData = "";
-        Boolean toggle = true;
-        String logo = " ____        _        \n"
-                + "|  _ \\ _   _| | _____ \n"
-                + "| | | | | | | |/ / _ \\\n"
-                + "| |_| | |_| |   <  __/\n"
-                + "|____/ \\__,_|_|\\_\\___|\n";
-        System.out.println("Hello! I'm Caviar\n" +
-                "What can I do for you?\n" +
-                "______________________\n");
         Scanner scan = new Scanner(System.in);
-        while(toggle) {
-            inData = scan.nextLine();
-            if (!inData.equals("bye")) {
+        ArrayList<String> tasks = new ArrayList<>();
+        System.out.println("Hello! I'm Caviar");
+        System.out.println("What can I do for you?");
+        System.out.println("______________________");
 
-                if (inData.equals("")) {
-                    System.out.println("no input, type something roe.");
-                } else {
-                    System.out.println(inData + " roe.");
-                }
-            }
-            else {
-                toggle = false;
+        boolean toggle = true;
+        while (toggle) {
+            String inData = scan.nextLine().trim();
+            if (inData.equals("bye")) {
                 System.out.println("Roe. Hope to see you again soon!");
+                toggle = false;
+            } else if (inData.equals("list")) {
+                System.out.println("list");
+                for (int i = 0; i < tasks.size(); i++) {
+                    System.out.println((i + 1) + ". " + tasks.get(i));
+                }
+            } else if (inData.isEmpty()) {
+                System.out.println("No input, type something roe.");
+            } else {
+                tasks.add(inData);
+                System.out.println("added: " + inData);
             }
-
-
         }
     }
 }
