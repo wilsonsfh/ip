@@ -4,33 +4,20 @@ public class TaskList {
     private ArrayList<Task> tasks;
 
     public TaskList() {
-        tasks = new ArrayList<>();
+        this.tasks = new ArrayList<>();
     }
 
-    public void addTask(String description) {
-        tasks.add(new Task(description));
+    public void addTask(Task task) {
+        tasks.add(task);
+        System.out.println("    Got it. I've added this task:");
+        System.out.println("      " + task);
+        System.out.println("    Now you have " + tasks.size() + " tasks in the list.");
     }
 
-    public Task getTask(int index) {
-        return tasks.get(index);
-    }
-
-    public int size() {
-        return tasks.size();
-    }
-
-    public void markTask(int index) {
-        tasks.get(index).markAsDone();
-    }
-
-    public void unmarkTask(int index) {
-        tasks.get(index).markAsNotDone();
-    }
-
-    public void listAllTasks() {
-        System.out.println("Here are the tasks in your list:");
+    public void listTasks() {
+        System.out.println("    Here are the tasks in your list:");
         for (int i = 0; i < tasks.size(); i++) {
-            System.out.println((i + 1) + ". " + tasks.get(i));
+            System.out.println("    " + (i + 1) + "." + tasks.get(i));
         }
     }
 }

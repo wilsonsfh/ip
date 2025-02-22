@@ -1,57 +1,50 @@
 import java.util.Scanner;
 
 public class Caviar {
-    private TaskList taskList;
-    private Scanner scanner;
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        TaskList taskList = new TaskList();
 
-    public Caviar() {
-        taskList = new TaskList();
-        scanner = new Scanner(System.in);
-    }
-
-    public void run() {
         System.out.println("Hello! I'm Caviar");
         System.out.println("What can I do for you?");
-        System.out.println("______________________");
+        System.out.println("______________________\n");
 
-        boolean isRunning = true;
-        while (isRunning) {
-            String input = scanner.nextLine().trim();
+        while (true) {
+            String input = scanner.nextLine();
+            String[] parts = input.split(" ", 2); // Split only once to handle missing arguments
 
-            if (input.equalsIgnoreCase("bye")) {
+            if (input.equals("bye")) {
                 System.out.println("Roe. Hope to see you again soon!");
-                isRunning = false;
-            } else if (input.equalsIgnoreCase("list")) {
-                taskList.listAllTasks();
-            } else if (input.startsWith("mark ")) {
-                try {
-                    int index = Integer.parseInt(input.substring(5).trim()) - 1;
-                    taskList.markTask(index);
-                    System.out.println("Nice! I've marked this task as done:");
-                    System.out.println("  " + taskList.getTask(index));
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                    System.out.println("Invalid task number for marking.");
+                break;
+            } else if (input.equals("list")) {
+                taskList.listTasks();
+            } else if (parts[0].equals("todo")) {
+                if (parts.length < 2) {
+                    System.out.println("roe..!! The description of a todo cannot be empty.");
+                } else {
+                    taskList.addTask(new Todo(parts[1]));
                 }
-            } else if (input.startsWith("unmark ")) {
-                try {
-                    int index = Integer.parseInt(input.substring(7).trim()) - 1;
-                    taskList.unmarkTask(index);
-                    System.out.println("OK, I've marked this task as not done yet:");
-                    System.out.println("  " + taskList.getTask(index));
-                } catch (NumberFormatException | IndexOutOfBoundsException e) {
-                    System.out.println("Invalid task number for unmarking.");
+            } else if (parts[0].equals("deadline")) {
+                if (parts.length < 2 || !parts[1].contains(" /by ")) {
+                    System.out.println("roe..!! The deadline command must follow this format:");
+                    System.out.println("    deadline <task description> /by <due date>");
+                } else {
+                    String[] deadlineParts = parts[1].split(" /by ", 2); // Ensure split is done safely
+                    taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
                 }
-            } else if (input.isEmpty()) {
-                System.out.println("No input, type something roe.");
+            } else if (parts[0].equals("event")) {
+                if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
+                    System.out.println("roe..!! The event command must follow this format:");
+                    System.out.println("    event <task description> /from <start time> /to <end time>");
+                } else {
+                    String[] eventParts = parts[1].split(" /from | /to ", 3); // Ensure correct parsing
+                    taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
+                }
             } else {
-                // Default case: add a new Task
-                taskList.addTask(input);
-                System.out.println("added: " + input);
+                System.out.println("roe..? I'm sorry, but I don't know what that means.");
             }
         }
-    }
 
-    public static void main(String[] args) {
-        new Caviar().run();
+        scanner.close();
     }
 }
