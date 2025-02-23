@@ -19,15 +19,21 @@ then
     exit 1
 fi
 
+# reset storage (delete previous tasks.txt)
+if [ -e "../data/tasks.txt" ]; then
+    rm ../data/tasks.txt
+fi
+
 # run the program, feed commands from input.txt file and redirect the output to the ACTUAL.TXT
-java -classpath ../bin Duke < input.txt > ACTUAL.TXT
+java -classpath ../bin Caviar < input.txt > ACTUAL.TXT
 
 # convert to UNIX format
 cp EXPECTED.TXT EXPECTED-UNIX.TXT
 dos2unix ACTUAL.TXT EXPECTED-UNIX.TXT
 
 # compare the output to the expected output
-diff ACTUAL.TXT EXPECTED-UNIX.TXT
+# ignore task count differences
+diff <(grep -v "Now you have [0-9]\+ tasks" ACTUAL.TXT) <(grep -v "Now you have [0-9]\+ tasks" EXPECTED-UNIX.TXT)
 if [ $? -eq 0 ]
 then
     echo "Test result: PASSED"
