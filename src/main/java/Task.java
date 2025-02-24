@@ -1,3 +1,5 @@
+import java.io.IOException;
+
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -29,34 +31,47 @@ public class Task {
         return getStatusIcon() + " " + description;
     }
 
-    public static Task fromStorageString(String data) {
+    public static Task fromStorageString(String data) throws CaviarException {
         String[] parts = data.split(" \\| ");
         String type = parts[0]; // T, D, or E
         boolean isDone = parts[1].equals("1");
         String description = parts[2];
 
         Task task;
-        switch (type) {
-            case "T":
-                task = new Todo(description);
-                break;
-            case "D":
-                String by = parts[3];
-                task = new Deadline(description, by);
-                break;
-            case "E":
-                String from = parts[3];
-                String to = parts[4];
-                task = new Event(description, from, to);
-                break;
-            default:
-                throw new IllegalArgumentException("Invalid task type in storage: " + type);
+        try {
+            switch (type) {
+                case "T":
+                    task = new Todo(description);
+                    break;
+                case "D":
+                    if (parts.length < 4) {
+                        throw new CaviarException("Invalid deadline format in storage, roe..!!");
+                    }
+                    String by = parts[3]; // Get the deadline time string
+                    task = new Deadline(description, by);
+                    break;
+                case "E":
+                    if (parts.length < 5) {
+                        throw new CaviarException("Invalid event format in storage, roe..!!");
+                    }
+                    String from = parts[3];
+                    String to = parts[4];
+                    task = new Event(description, from, to);
+                    break;
+                default:
+                    throw new IllegalArgumentException("Invalid task type in storage: " + type);
+            }
+
+            if (isDone) {
+                task.markAsDone();
+            }
+
+            return task;
+        } catch (CaviarException e) {
+            System.out.println("roe..!! Error loading task from storage: " + data);
+            e.printStackTrace();
         }
 
-        if (isDone) {
-            task.markAsDone();
-        }
-
-        return task;
+        return null;
     }
 }
