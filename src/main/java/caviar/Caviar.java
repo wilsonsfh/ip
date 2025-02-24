@@ -1,86 +1,79 @@
 package caviar;
 
 import caviar.storage.Storage;
-import caviar.task.Deadline;
-import caviar.task.Task;
-import caviar.task.Event;
-import caviar.task.Todo;
+import caviar.task.*;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
+import caviar.ui.Ui;
 
-import java.util.Scanner;
 import java.io.IOException;
 
 public class Caviar {
-    public static void main(String[] args) throws IOException, CaviarException {
-        Scanner scanner = new Scanner(System.in);
-        Storage storage = new Storage("data/tasks.txt");
-        TaskList taskList;
+    private final Ui ui;
+    private final Storage storage;
+    private final TaskList taskList;
 
+    public Caviar(String filePath) throws CaviarException {
+        ui = new Ui();
+        storage = new Storage(filePath);
+        TaskList tempTaskList;
         try {
-            taskList = new TaskList(storage); // Try loading tasks from storage
+            tempTaskList = new TaskList(storage);
         } catch (IOException e) {
-            System.out.println("Roe..? Error loading tasks.");
-            taskList = new TaskList(); // Fallback caviar.command.TaskList with no storage dependency
+            ui.showMessage("Roe..? Error loading tasks.");
+            tempTaskList = new TaskList();
         }
+        taskList = tempTaskList;
+    }
 
-        System.out.println("Hello! I'm Caviar... Roe!!");
-        System.out.println("What can I do for you, roe?");
-        System.out.println("______________________\n");
-
+    public void run() {
+        ui.showWelcome();
         while (true) {
             try {
-                String input = scanner.nextLine().trim();
+                String input = ui.readCommand();
                 if (input.equals("bye")) {
-                    System.out.println("Roe. Hope to see you again soon!");
+                    ui.showMessage("Roe. Hope to see you again soon!");
                     break;
                 } else if (input.equals("list")) {
                     taskList.listTasks();
                 } else {
-                    String[] parts = input.split(" ", 2);
-                    if (parts[0].equals("todo")) {
-                        if (parts.length < 2) throw new CaviarException("The description of a todo cannot be empty.");
-                        taskList.addTask(new Todo(parts[1]));
-                    } else if (parts[0].equals("deadline")) {
-                        if (parts.length < 2 || !parts[1].contains(" /by ")) throw new CaviarException("The deadline format is incorrect! Use: deadline <task> /by <date>.");
-                        String[] deadlineParts = parts[1].split(" /by ", 2);
-                        try {
-                            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
-                        } catch (CaviarException e) {
-                            System.out.println(e.getMessage());
-                        }
-                    } else if (parts[0].equals("event")) {
-                        if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) throw new CaviarException("The event format is incorrect! Use: event <task> /from <start> /to <end>.");
-                        String[] eventParts = parts[1].split(" /from | /to ", 3);
-                        taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
-                    } else if (parts[0].equals("on")) {
-                        taskList.showTasksOnDate(parts[1]);
-                    } else if (parts[0].equals("mark")) {
-                        if (parts.length < 2) throw new CaviarException("Mark which task? roe..!!");
-                        int index = Integer.parseInt(parts[1]) - 1;
-                        taskList.markTask(index);
-                    } else if (parts[0].equals("unmark")) {
-                        if (parts.length < 2) throw new CaviarException("Unmark which task? roe..!!");
-                        int index = Integer.parseInt(parts[1]) - 1;
-                        taskList.unmarkTask(index);
-                    } else if (parts[0].equals("delete")) {
-                        if (parts.length < 2) throw new CaviarException("Delete which task? roe..!!");
-                        int index = Integer.parseInt(parts[1]) - 1;
-                        taskList.deleteTask(index);
-                    } else {
-                        throw new CaviarException("I don't understand roe..?");
-                    }
+                    processCommand(input);
                 }
             } catch (CaviarException e) {
-                System.out.println(e.getMessage());
+                ui.showMessage(e.getMessage());
             } catch (NumberFormatException e) {
-                System.out.println("roe..!! Invalid number format.");
+                ui.showMessage("roe..!! Invalid number format.");
             } catch (Exception e) {
-                System.out.println("roe..!! Something went wrong: " + e.getMessage());
-                e.printStackTrace(); // Print stack trace for debugging
+                ui.showMessage("roe..!! Something went wrong.");
             }
         }
+        ui.close();
+    }
 
-        scanner.close();
+    private void processCommand(String input) throws CaviarException {
+        String[] parts = input.split(" ", 2);
+        if (parts[0].equals("todo")) {
+            if (parts.length < 2) throw new CaviarException("The description of a todo cannot be empty.");
+            taskList.addTask(new Todo(parts[1]));
+        } else if (parts[0].equals("deadline")) {
+            if (parts.length < 2 || !parts[1].contains(" /by "))
+                throw new CaviarException("The deadline format is incorrect! Use: deadline <task> /by <date>.");
+            String[] deadlineParts = parts[1].split(" /by ", 2);
+            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
+        } else if (parts[0].equals("event")) {
+            if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to "))
+                throw new CaviarException("The event format is incorrect! Use: event <task> /from <start> /to <end>.");
+            String[] eventParts = parts[1].split(" /from | /to ", 3);
+            taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
+        } else {
+            throw new CaviarException("I don't understand roe..?");
+        }
+    }
+
+    public static void main(String[] args) {
+        try {
+            new Caviar("data/tasks.txt").run();
+        } catch (CaviarException e) {
+        }
     }
 }

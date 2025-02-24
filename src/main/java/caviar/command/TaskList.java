@@ -17,8 +17,8 @@ public class TaskList {
     private Storage storage;
 
     public TaskList() {
-        this.tasks = new ArrayList<>(); // No storage dependency
         this.storage = null; // Indicate that storage is unavailable
+        this.tasks = new ArrayList<>(); // No storage dependency
     }
 
     public TaskList(Storage storage) throws IOException, CaviarException {
@@ -94,6 +94,34 @@ public class TaskList {
         if (storage != null) {
             storage.save(tasks);
         }
+    }
+
+    /**
+     * Finds and prints tasks that contain the given keyword.
+     *
+     * @param keyword The keyword to search for.
+     */
+    public void findTasks(String keyword) {
+        System.out.println("    Roe! Here are the matching tasks in your list:");
+        int count = 1;
+        for (Task task : tasks) {
+            if (task.getDescription().contains(keyword)) {
+                System.out.println("    " + count + "." + task);
+                count++;
+            }
+        }
+        if (count == 1) {
+            System.out.println("    Roe..? No matching tasks found.");
+        }
+    }
+
+    /**
+     * Returns the list of tasks.
+     *
+     * @return List of tasks.
+     */
+    public ArrayList<Task> getTasks() {
+        return tasks;
     }
 
     /**

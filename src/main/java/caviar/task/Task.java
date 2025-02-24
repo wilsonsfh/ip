@@ -7,8 +7,6 @@ import caviar.task.Todo;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 
-import caviar.exception.CaviarException;
-
 public class Task {
     protected String description;
     protected boolean isDone;
@@ -16,6 +14,10 @@ public class Task {
     public Task(String description) {
         this.description = description;
         this.isDone = false;
+    }
+
+    public String getDescription() {
+        return description;
     }
 
     public void markAsDone() {
