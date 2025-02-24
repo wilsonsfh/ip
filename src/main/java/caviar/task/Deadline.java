@@ -1,3 +1,12 @@
+package caviar.task;
+
+import caviar.storage.Storage;
+import caviar.task.Task;
+import caviar.task.Event;
+import caviar.task.Todo;
+import caviar.command.TaskList;
+import caviar.exception.CaviarException;
+
 import java.time.LocalDateTime;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -11,6 +20,10 @@ public class Deadline extends Task {
     public Deadline(String description, String by) throws CaviarException {
         super(description);
         this.by = parseDateTime(by);
+    }
+
+    public LocalDateTime getBy() {
+        return by;
     }
 
     /**

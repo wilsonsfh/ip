@@ -1,3 +1,12 @@
+package caviar.storage;
+
+import caviar.task.Deadline;
+import caviar.task.Task;
+import caviar.task.Event;
+import caviar.task.Todo;
+import caviar.command.TaskList;
+import caviar.exception.CaviarException;
+
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;

@@ -1,7 +1,15 @@
+package caviar.command;
+
+import caviar.storage.Storage;
+import caviar.task.Deadline;
+import caviar.task.Task;
+import caviar.task.Event;
+import caviar.task.Todo;
+import caviar.exception.CaviarException;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.List;
 import java.io.IOException;
 
 public class TaskList {
@@ -99,7 +107,7 @@ public class TaskList {
             for (Task t : tasks) {
                 if (t instanceof Deadline) {
                     Deadline d = (Deadline) t;
-                    if (d.by.toLocalDate().equals(targetDate)) {
+                    if (d.getBy().toLocalDate().equals(targetDate)) {
                         System.out.println("  " + d);
                         found = true;
                     }
