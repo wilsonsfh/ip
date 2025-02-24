@@ -1,3 +1,13 @@
+package caviar;
+
+import caviar.storage.Storage;
+import caviar.task.Deadline;
+import caviar.task.Task;
+import caviar.task.Event;
+import caviar.task.Todo;
+import caviar.command.TaskList;
+import caviar.exception.CaviarException;
+
 import java.util.Scanner;
 import java.io.IOException;
 
@@ -11,11 +21,11 @@ public class Caviar {
             taskList = new TaskList(storage); // Try loading tasks from storage
         } catch (IOException e) {
             System.out.println("Roe..? Error loading tasks.");
-            taskList = new TaskList(); // Fallback TaskList with no storage dependency
+            taskList = new TaskList(); // Fallback caviar.command.TaskList with no storage dependency
         }
 
-        System.out.println("Hello! I'm Caviar. Roe!");
-        System.out.println("What can I do for you?");
+        System.out.println("Hello! I'm Caviar... Roe!!");
+        System.out.println("What can I do for you, roe?");
         System.out.println("______________________\n");
 
         while (true) {
@@ -67,7 +77,7 @@ public class Caviar {
                 System.out.println("roe..!! Invalid number format.");
             } catch (Exception e) {
                 System.out.println("roe..!! Something went wrong: " + e.getMessage());
-                e.printStackTrace(); // ✅ Print stack trace for debugging
+                e.printStackTrace(); // Print stack trace for debugging
             }
         }
 
