@@ -17,6 +17,8 @@ public class Storage {
 
         if (parentDir != null && !parentDir.exists()) {
             parentDir.mkdirs(); // Create missing folders
+            System.out.println("Roe..!! Created missing directory for tasks.");
+
         }
 
         FileWriter writer = new FileWriter(file);
@@ -26,7 +28,8 @@ public class Storage {
         writer.close();
     }
 
-    public ArrayList<Task> load() throws IOException {
+
+    public ArrayList<Task> load() throws IOException, CaviarException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
 

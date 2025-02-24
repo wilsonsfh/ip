@@ -2,7 +2,7 @@ import java.util.Scanner;
 import java.io.IOException;
 
 public class Caviar {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException, CaviarException {
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage("data/tasks.txt");
         TaskList taskList;
@@ -34,11 +34,17 @@ public class Caviar {
                     } else if (parts[0].equals("deadline")) {
                         if (parts.length < 2 || !parts[1].contains(" /by ")) throw new CaviarException("The deadline format is incorrect! Use: deadline <task> /by <date>.");
                         String[] deadlineParts = parts[1].split(" /by ", 2);
-                        taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
+                        try {
+                            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
+                        } catch (CaviarException e) {
+                            System.out.println(e.getMessage());
+                        }
                     } else if (parts[0].equals("event")) {
                         if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) throw new CaviarException("The event format is incorrect! Use: event <task> /from <start> /to <end>.");
                         String[] eventParts = parts[1].split(" /from | /to ", 3);
                         taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
+                    } else if (parts[0].equals("on")) {
+                        taskList.showTasksOnDate(parts[1]);
                     } else if (parts[0].equals("mark")) {
                         if (parts.length < 2) throw new CaviarException("Mark which task? roe..!!");
                         int index = Integer.parseInt(parts[1]) - 1;
@@ -60,7 +66,8 @@ public class Caviar {
             } catch (NumberFormatException e) {
                 System.out.println("roe..!! Invalid number format.");
             } catch (Exception e) {
-                System.out.println("roe..!! Something went wrong.");
+                System.out.println("roe..!! Something went wrong: " + e.getMessage());
+                e.printStackTrace(); // ✅ Print stack trace for debugging
             }
         }
 

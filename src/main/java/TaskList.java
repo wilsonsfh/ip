@@ -1,4 +1,7 @@
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 
 public class TaskList {
@@ -10,14 +13,19 @@ public class TaskList {
         this.storage = null; // Indicate that storage is unavailable
     }
 
-    public TaskList(Storage storage) throws IOException {
+    public TaskList(Storage storage) throws IOException, CaviarException {
         this.storage = storage;
         this.tasks = storage.load(); // Load tasks from file
     }
 
-    public void saveTasks() throws IOException {
-        if (storage != null) {
-            storage.save(tasks);
+    public void listTasks() {
+        if (tasks.isEmpty()) {
+            System.out.println("    Roe..? No tasks in the list yet.");
+            return;
+        }
+        System.out.println("    Roe! Here are the tasks in your list:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("    " + (i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -32,18 +40,8 @@ public class TaskList {
                 storage.save(tasks);
             } catch (IOException e) {
                 System.out.println("roe..!! Error saving task.");
+                e.printStackTrace(); // Debugging
             }
-        }
-    }
-
-    public void listTasks() {
-        if (tasks.isEmpty()) {
-            System.out.println("    Roe..? No tasks in the list yet.");
-            return;
-        }
-        System.out.println("    Roe! Here are the tasks in your list:");
-        for (int i = 0; i < tasks.size(); i++) {
-            System.out.println("    " + (i + 1) + "." + tasks.get(i));
         }
     }
 
@@ -81,6 +79,37 @@ public class TaskList {
             saveTasks();
         } catch (IOException e) {
             System.out.println("roe..!! Error saving task.");
+        }
+    }
+
+    public void saveTasks() throws IOException {
+        if (storage != null) {
+            storage.save(tasks);
+        }
+    }
+
+    /**
+     * Shows all deadlines that fall on the specified date.
+     */
+    public void showTasksOnDate(String dateStr) {
+        try {
+            LocalDate targetDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+            boolean found = false;
+            System.out.println("Roe. Deadlines for " + targetDate.format(DateTimeFormatter.ofPattern("d MMM yyyy")) + ":");
+            for (Task t : tasks) {
+                if (t instanceof Deadline) {
+                    Deadline d = (Deadline) t;
+                    if (d.by.toLocalDate().equals(targetDate)) {
+                        System.out.println("  " + d);
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                System.out.println("No deadlines on this date.");
+            }
+        } catch (Exception e) {
+            System.out.println("Invalid date format. Use 'yyyy-MM-dd'.");
         }
     }
 }
