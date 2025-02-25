@@ -28,11 +28,19 @@ test {
 }
 
 application {
-    mainClass.set("seedu.duke.Duke")
+    mainClass.set("caviar.Caviar")
+}
+
+jar {
+    manifest {
+        attributes(
+                'Main-Class': 'caviar.Caviar'
+        )
+    }
 }
 
 shadowJar {
-    archiveBaseName = "duke"
+    archiveBaseName = "ip"
     archiveClassifier = null
 }
 

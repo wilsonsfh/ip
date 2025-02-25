@@ -1,2 +1,7 @@
+todo
+todo abc
+deadline
 deadline cs2103-week 2 /by 2025-02-23
+event
+event cs2103-week 3 /from 2025-02-23 /to 2025-02-28
 bye

@@ -1,8 +1,17 @@
-Hello! I'm caviar.Caviar. Roe!
+Hello! I'm Caviar. Roe!
 What can I do for you?
 ______________________
 
+roe..!! The description of a todo cannot be empty.
     Roe! I've added this task:
-      [D][ ] cs2103-week 2 (by: Feb 23 2025)
-    Now you have 7 tasks in the list. Roe roe.
+      [T][ ] abc
+    Now you have 13 tasks in the list. Roe roe.
+roe..!! The deadline format is incorrect! Use: deadline <task> /by <date>.
+    Roe! I've added this task:
+      [D][ ] cs2103-week 2 (by: Feb 23 2025, 12:00 am)
+    Now you have 14 tasks in the list. Roe roe.
+roe..!! The event format is incorrect! Use: event <task> /from <start> /to <end>.
+    Roe! I've added this task:
+      [E][ ] cs2103-week 3 (from: Feb 23 2025, 12:00 am to: Feb 28 2025, 12:00 am)
+    Now you have 15 tasks in the list. Roe roe.
 Roe. Hope to see you again soon!
