@@ -6,7 +6,6 @@ import caviar.task.Task;
 import caviar.task.Event;
 import caviar.task.Todo;
 import caviar.exception.CaviarException;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;

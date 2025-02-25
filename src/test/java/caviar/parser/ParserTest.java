@@ -5,7 +5,6 @@ import caviar.exception.CaviarException;
 import caviar.storage.Storage;
 import caviar.ui.Ui;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
