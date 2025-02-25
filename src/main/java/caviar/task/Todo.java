@@ -11,6 +11,7 @@ import caviar.exception.CaviarException;
  * Represents a Todo task, which is a simple task without any date or time.
  */
 public class Todo extends Task {
+
     /**
      * Constructs a new Todo task.
      *

@@ -61,7 +61,6 @@ public class Event extends Task {
                 + " - yyyy/MM/dd HH:mm (e.g., 2019/12/02 18:00)");
     }
 
-
     @Override
     public String toString() {
         DateTimeFormatter displayFormat = DateTimeFormatter.ofPattern("MMM d yyyy, h:mm a");

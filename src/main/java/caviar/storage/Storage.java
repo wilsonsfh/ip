@@ -37,7 +37,6 @@ public class Storage {
         writer.close();
     }
 
-
     public ArrayList<Task> load() throws IOException, CaviarException {
         ArrayList<Task> tasks = new ArrayList<>();
         File file = new File(filePath);
