@@ -7,6 +7,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Tests the behavior of the {@link Task} class.
  */
 class TaskTest {
+
     /**
      * Tests if a task can be marked as done.
      */

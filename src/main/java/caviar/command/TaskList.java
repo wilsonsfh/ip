@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.io.IOException;
 
 /**
- * Represents a list of tasks that can be modified.
+ * Represents a list of tasks that can be modified and stored.
  */
 public class TaskList {
     private ArrayList<Task> tasks;
@@ -28,8 +28,13 @@ public class TaskList {
     }
 
     /**
-     * Initializes an empty task list, with no storage dependency
+     * Initializes a TaskList and loads tasks from storage.
+     *
+     * @param storage The storage instance to load tasks from.
+     * @throws IOException If there is an issue reading from the storage file.
+     * @throws CaviarException If the storage file contains invalid task data.
      */
+
     public TaskList(Storage storage) throws IOException, CaviarException {
         this.storage = storage;
         this.tasks = storage.load(); // Load tasks from file
