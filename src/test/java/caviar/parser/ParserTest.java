@@ -1,11 +1,16 @@
 package caviar.parser;
 
+import caviar.task.Task;
+import caviar.task.Deadline;
+import caviar.task.Todo;
+import caviar.task.Event;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 import caviar.storage.Storage;
 import caviar.ui.Ui;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
+import java.util.List;
 
 /**
  * Tests the behavior of the {@link Parser} class.
@@ -35,5 +40,14 @@ class ParserTest {
                 Parser.parseAndExecute("unknownCommand", taskList, ui, storage)
         );
         assertTrue(exception.getMessage().contains("roe..!!"), "Should throw an error for unknown commands.");
+    }
+
+    @Test
+    void testParseFind() throws CaviarException {
+        taskList.addTask(new Todo("read book"));
+        taskList.addTask(new Deadline("return book", "2025-02-25"));
+
+        List<Task> results = taskList.findTasks("book");
+        assertEquals(2, results.size(), "Both tasks should be found.");
     }
 }

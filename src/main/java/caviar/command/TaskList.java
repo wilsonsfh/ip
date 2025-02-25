@@ -3,12 +3,11 @@ package caviar.command;
 import caviar.storage.Storage;
 import caviar.task.Deadline;
 import caviar.task.Task;
-import caviar.task.Event;
-import caviar.task.Todo;
 import caviar.exception.CaviarException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.List;
 import java.io.IOException;
 
 /**
@@ -119,22 +118,19 @@ public class TaskList {
     }
 
     /**
-     * Finds and prints tasks that contain the given keyword.
+     * Finds tasks that contain the specified keyword in their descriptions.
      *
      * @param keyword The keyword to search for.
+     * @return A list of matching tasks.
      */
-    public void findTasks(String keyword) {
-        System.out.println("    Roe! Here are the matching tasks in your list:");
-        int count = 1;
+    public List<Task> findTasks(String keyword) {
+        List<Task> matchingTasks = new ArrayList<>();
         for (Task task : tasks) {
-            if (task.getDescription().contains(keyword)) {
-                System.out.println("    " + count + "." + task);
-                count++;
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
+                matchingTasks.add(task);
             }
         }
-        if (count == 1) {
-            System.out.println("    Roe..? No matching tasks found.");
-        }
+        return matchingTasks;
     }
 
     /**

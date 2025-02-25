@@ -1,10 +1,14 @@
 package caviar.parser;
 
-import caviar.task.*;
+import caviar.task.Task;
+import caviar.task.Deadline;
+import caviar.task.Todo;
+import caviar.task.Event;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 import caviar.storage.Storage;
 import caviar.ui.Ui;
+import java.util.List;
 
 /**
  * Handles parsing and execution of corresponding command.
@@ -22,6 +26,7 @@ public class Parser {
      */
     public static void parseAndExecute(String input, TaskList taskList, Ui ui, Storage storage) throws CaviarException {
         String[] parts = input.split(" ", 2);
+
         switch (parts[0]) {
             case "bye":
                 ui.showMessage("Roe. Hope to see you again soon!");
@@ -46,6 +51,21 @@ public class Parser {
                 String[] eventParts = parts[1].split(" /from | /to ", 3);
                 taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
                 break;
+            case "find":
+                if (parts.length < 2) {
+                    throw new CaviarException("roe..!! Please specify a keyword to search.");
+                }
+                String keyword = parts[1];
+                List<Task> foundTasks = taskList.findTasks(keyword);
+                if (foundTasks.isEmpty()) {
+                    ui.showMessage("Roe..!! No matching tasks found.");
+                } else {
+                    ui.showMessage("Roe! Here are the matching tasks:");
+                    for (int i = 0; i < foundTasks.size(); i++) {
+                        ui.showMessage("    " + (i + 1) + ". " + foundTasks.get(i));
+                    }
+                }
+                break;
             case "mark":
                 if (parts.length < 2) throw new CaviarException("Mark which task? roe..!!");
                 int markIndex = Integer.parseInt(parts[1]) - 1;
@@ -60,10 +80,6 @@ public class Parser {
                 if (parts.length < 2) throw new CaviarException("Delete which task? roe..!!");
                 int deleteIndex = Integer.parseInt(parts[1]) - 1;
                 taskList.deleteTask(deleteIndex);
-                break;
-            case "find":
-                if (parts.length < 2) throw new CaviarException("Find what? Roe..!!");
-                taskList.findTasks(parts[1]);
                 break;
             default:
                 throw new CaviarException("I don't understand roe..?");

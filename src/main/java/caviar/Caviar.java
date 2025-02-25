@@ -3,6 +3,7 @@ package caviar;
 import caviar.storage.Storage;
 import caviar.task.*;
 import caviar.command.TaskList;
+import caviar.parser.Parser;
 import caviar.exception.CaviarException;
 import caviar.ui.Ui;
 import java.io.IOException;
@@ -62,23 +63,7 @@ public class Caviar {
     }
 
     private void processCommand(String input) throws CaviarException {
-        String[] parts = input.split(" ", 2);
-        if (parts[0].equals("todo")) {
-            if (parts.length < 2) throw new CaviarException("The description of a todo cannot be empty.");
-            taskList.addTask(new Todo(parts[1]));
-        } else if (parts[0].equals("deadline")) {
-            if (parts.length < 2 || !parts[1].contains(" /by "))
-                throw new CaviarException("The deadline format is incorrect! Use: deadline <task> /by <date>.");
-            String[] deadlineParts = parts[1].split(" /by ", 2);
-            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
-        } else if (parts[0].equals("event")) {
-            if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to "))
-                throw new CaviarException("The event format is incorrect! Use: event <task> /from <start> /to <end>.");
-            String[] eventParts = parts[1].split(" /from | /to ", 3);
-            taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
-        } else {
-            throw new CaviarException("I don't understand roe..?");
-        }
+        Parser.parseAndExecute(input, taskList, ui, storage);
     }
 
     /**
