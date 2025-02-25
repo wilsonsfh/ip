@@ -8,11 +8,20 @@ import caviar.ui.Ui;
 
 import java.io.IOException;
 
+/**
+ * The main class for the Caviar chatbot application.
+ * It talks to you, and acts as a interactive to-do list friend for you.
+ */
 public class Caviar {
     private final Ui ui;
     private final Storage storage;
     private final TaskList taskList;
 
+    /**
+     * Initializes the chatbot, loading tasks from storage if available.
+     *
+     * @param filePath Path to the storage file.
+     */
     public Caviar(String filePath) throws CaviarException {
         ui = new Ui();
         storage = new Storage(filePath);
@@ -26,6 +35,9 @@ public class Caviar {
         taskList = tempTaskList;
     }
 
+    /**
+     * Runs the main interaction loop of Caviar chatbot.
+     */
     public void run() {
         ui.showWelcome();
         while (true) {
@@ -70,6 +82,11 @@ public class Caviar {
         }
     }
 
+    /**
+     * The main entry point of the application.
+     *
+     * @param args Command-line arguments.
+     */
     public static void main(String[] args) {
         try {
             new Caviar("data/tasks.txt").run();

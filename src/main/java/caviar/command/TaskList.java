@@ -12,20 +12,33 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.io.IOException;
 
+/**
+ * Represents a list of tasks that can be modified.
+ */
 public class TaskList {
     private ArrayList<Task> tasks;
     private Storage storage;
 
+    /**
+     * Initializes an empty task list, with no storage dependency
+     */
     public TaskList() {
         this.storage = null; // Indicate that storage is unavailable
         this.tasks = new ArrayList<>(); // No storage dependency
     }
 
+    /**
+     * Initializes an empty task list, with no storage dependency
+     */
     public TaskList(Storage storage) throws IOException, CaviarException {
         this.storage = storage;
         this.tasks = storage.load(); // Load tasks from file
     }
 
+    /**
+     * Lists all tasks in the current task list.
+     * Displays a message if the task list is empty.
+     */
     public void listTasks() {
         if (tasks.isEmpty()) {
             System.out.println("    Roe..? No tasks in the list yet.");
@@ -37,6 +50,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Adds a task to the list.
+     *
+     * @param task The task to add.
+     */
     public void addTask(Task task) {
         tasks.add(task);
         System.out.println("    Roe! I've added this task:");

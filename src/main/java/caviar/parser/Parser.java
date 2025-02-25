@@ -7,7 +7,7 @@ import caviar.storage.Storage;
 import caviar.ui.Ui;
 
 /**
- * Handles parsing and execution of user commands.
+ * Handles parsing and execution of corresponding command.
  */
 public class Parser {
 
