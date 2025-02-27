@@ -1,10 +1,5 @@
 package caviar.task;
 
-import caviar.storage.Storage;
-import caviar.task.Deadline;
-import caviar.task.Event;
-import caviar.task.Todo;
-import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 
 /**
@@ -63,7 +58,9 @@ public class Task {
      */
     public String toStorageString() {
         return (this instanceof Todo ? "T" : this instanceof Deadline ? "D" : "E")
-                + " | " + (isDone ? "1" : "0") + " | " + description;
+            + " | " + (isDone ? "1" : "0")
+            + " | "
+            + description;
     }
 
     @Override
@@ -71,6 +68,13 @@ public class Task {
         return getStatusIcon() + " " + description;
     }
 
+    /**
+     * Recreates a Task object from a storage string.
+     *
+     * @param data The storage string containing task data.
+     * @return The reconstructed Task object.
+     * @throws CaviarException If the data is invalid.
+     */
     public static Task fromStorageString(String data) throws CaviarException {
         String[] parts = data.split(" \\| ");
         String type = parts[0]; // T, D, or E
@@ -80,26 +84,26 @@ public class Task {
         Task task;
         try {
             switch (type) {
-                case "T":
-                    task = new Todo(description);
-                    break;
-                case "D":
-                    if (parts.length < 4) {
-                        throw new CaviarException("Invalid deadline format in storage, roe..!!");
-                    }
-                    String by = parts[3]; // Get the deadline time string
-                    task = new Deadline(description, by);
-                    break;
-                case "E":
-                    if (parts.length < 5) {
-                        throw new CaviarException("Invalid event format in storage, roe..!!");
-                    }
-                    String from = parts[3];
-                    String to = parts[4];
-                    task = new Event(description, from, to);
-                    break;
-                default:
-                    throw new IllegalArgumentException("Invalid task type in storage: " + type);
+            case "T":
+                task = new Todo(description);
+                break;
+            case "D":
+                if (parts.length < 4) {
+                    throw new CaviarException("Invalid deadline format in storage, roe..!!");
+                }
+                String by = parts[3]; // Get the deadline time string
+                task = new Deadline(description, by);
+                break;
+            case "E":
+                if (parts.length < 5) {
+                    throw new CaviarException("Invalid event format in storage, roe..!!");
+                }
+                String from = parts[3];
+                String to = parts[4];
+                task = new Event(description, from, to);
+                break;
+            default:
+                throw new IllegalArgumentException("Invalid task type in storage: " + type);
             }
 
             if (isDone) {

@@ -1,16 +1,17 @@
 package caviar.parser;
 
-import caviar.task.Task;
-import caviar.task.Deadline;
-import caviar.task.Todo;
-import caviar.task.Event;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import java.util.List;
+import org.junit.jupiter.api.Test;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 import caviar.storage.Storage;
+import caviar.task.Deadline;
+import caviar.task.Task;
+import caviar.task.Todo;
 import caviar.ui.Ui;
-import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
 
 /**
  * Tests the behavior of the {@link Parser} class.
@@ -37,7 +38,7 @@ class ParserTest {
     @Test
     void testParseInvalidCommand() {
         Exception exception = assertThrows(CaviarException.class, () ->
-                Parser.parseAndExecute("unknownCommand", taskList, ui, storage)
+            Parser.parseAndExecute("unknownCommand", taskList, ui, storage)
         );
         assertTrue(exception.getMessage().contains("roe..!!"), "Should throw an error for unknown commands.");
     }

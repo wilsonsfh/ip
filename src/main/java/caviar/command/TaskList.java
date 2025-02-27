@@ -1,24 +1,27 @@
 package caviar.command;
 
-import caviar.storage.Storage;
-import caviar.task.Deadline;
-import caviar.task.Task;
-import caviar.exception.CaviarException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.IOException;
+import caviar.exception.CaviarException;
+import caviar.storage.Storage;
+import caviar.task.Deadline;
+import caviar.task.Task;
 
 /**
  * Represents a list of tasks that can be modified and stored.
+ *
+ * <p>The {@code TaskList} class manages task additions, deletions,
+ * and storage operations.</p>
  */
 public class TaskList {
     private ArrayList<Task> tasks;
     private Storage storage;
 
     /**
-     * Initializes an empty task list, with no storage dependency
+     * Constructs an empty {@code TaskList} without storage.
      */
     public TaskList() {
         this.storage = null; // Indicate that storage is unavailable
@@ -26,13 +29,12 @@ public class TaskList {
     }
 
     /**
-     * Initializes a TaskList and loads tasks from storage.
+     * Constructs a {@code TaskList} and loads tasks from storage.
      *
      * @param storage The storage instance to load tasks from.
-     * @throws IOException If there is an issue reading from the storage file.
+     * @throws IOException     If there is an issue reading from the storage file.
      * @throws CaviarException If the storage file contains invalid task data.
      */
-
     public TaskList(Storage storage) throws IOException, CaviarException {
         this.storage = storage;
         this.tasks = storage.load(); // Load tasks from file
@@ -54,15 +56,16 @@ public class TaskList {
     }
 
     /**
-     * Adds a task to the list.
+     * Saves the tasks to storage.
      *
-     * @param task The task to add.
+     * @throws IOException If an error occurs during saving.
      */
     public void addTask(Task task) {
         tasks.add(task);
         System.out.println("    Roe! I've added this task:");
         System.out.println("      " + task);
-        System.out.println("    Now you have " + tasks.size() + " task" + (tasks.size() > 1 ? "s" : "") + " in the list. Roe roe.");
+        System.out.println(
+            "    Now you have " + tasks.size() + " task" + (tasks.size() > 1 ? "s" : "") + " in the list. Roe roe.");
 
         if (storage != null) {
             try {
@@ -74,8 +77,16 @@ public class TaskList {
         }
     }
 
+    /**
+     * Marks the specified task as done.
+     *
+     * @param index The index of the task to mark as done.
+     * @throws CaviarException If the index is out of range.
+     */
     public void markTask(int index) throws CaviarException {
-        if (index < 0 || index >= tasks.size()) throw new CaviarException("No such task exists, roe..!!");
+        if (index < 0 || index >= tasks.size()) {
+            throw new CaviarException("No such task exists, roe..!!");
+        }
         tasks.get(index).markAsDone();
         System.out.println("    Roe! I've marked this task as done:");
         System.out.println("      " + tasks.get(index));
@@ -86,8 +97,19 @@ public class TaskList {
         }
     }
 
+    /**
+     * Marks the specified task as not done.
+     *
+     * <p>If the storage is available, this method also updates the tasks in the
+     * storage file.</p>
+     *
+     * @param index The index of the task to mark as not done.
+     * @throws CaviarException If the index is out of range (invalid task index).
+     */
     public void unmarkTask(int index) throws CaviarException {
-        if (index < 0 || index >= tasks.size()) throw new CaviarException("No such task exists, roe..!!");
+        if (index < 0 || index >= tasks.size()) {
+            throw new CaviarException("No such task exists, roe..!!");
+        }
         tasks.get(index).markAsNotDone();
         System.out.println("    Roe! I've marked this task as not done yet:");
         System.out.println("      " + tasks.get(index));
@@ -98,8 +120,19 @@ public class TaskList {
         }
     }
 
+    /**
+     * Removes a task from the list based on its index.
+     *
+     * <p>If the storage is available, this method also updates the tasks in the
+     * storage file.</p>
+     *
+     * @param index The index of the task to remove.
+     * @throws CaviarException If the index is out of range (invalid task index).
+     */
     public void deleteTask(int index) throws CaviarException {
-        if (index < 0 || index >= tasks.size()) throw new CaviarException("No such task exists, roe..!!");
+        if (index < 0 || index >= tasks.size()) {
+            throw new CaviarException("No such task exists, roe..!!");
+        }
         Task removedTask = tasks.remove(index);
         System.out.println("    Roe! I've removed this task:");
         System.out.println("      " + removedTask);
@@ -111,6 +144,13 @@ public class TaskList {
         }
     }
 
+    /**
+     * Saves all tasks to the underlying storage.
+     *
+     * <p>If no storage is set (i.e., {@code storage == null}), this method does nothing.</p>
+     *
+     * @throws IOException If an I/O error occurs while writing tasks to the storage file.
+     */
     public void saveTasks() throws IOException {
         if (storage != null) {
             storage.save(tasks);
@@ -143,13 +183,18 @@ public class TaskList {
     }
 
     /**
-     * Shows all deadlines that fall on the specified date.
+     * Shows all deadlines that occur on the specified date.
+     *
+     * <p>If no matching deadlines are found, a message is displayed instead.</p>
+     *
+     * @param dateStr The date string in {@code yyyy-MM-dd} format.
      */
     public void showTasksOnDate(String dateStr) {
         try {
             LocalDate targetDate = LocalDate.parse(dateStr, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
             boolean found = false;
-            System.out.println("Roe. Deadlines for " + targetDate.format(DateTimeFormatter.ofPattern("d MMM yyyy")) + ":");
+            System.out.println(
+                "Roe. Deadlines for " + targetDate.format(DateTimeFormatter.ofPattern("d MMM yyyy")) + ":");
             for (Task t : tasks) {
                 if (t instanceof Deadline) {
                     Deadline d = (Deadline) t;

@@ -1,11 +1,11 @@
 package caviar.command;
 
-import caviar.task.Task;
-import caviar.task.Todo;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
-import java.util.List;
+import caviar.task.Task;
+import caviar.task.Todo;
 
 /**
  * Tests the behavior of the {@link TaskList} class.
