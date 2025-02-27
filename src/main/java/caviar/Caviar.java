@@ -1,16 +1,17 @@
 package caviar;
 
-import caviar.storage.Storage;
-import caviar.task.*;
-import caviar.command.TaskList;
-import caviar.parser.Parser;
-import caviar.exception.CaviarException;
-import caviar.ui.Ui;
 import java.io.IOException;
+import caviar.command.TaskList;
+import caviar.exception.CaviarException;
+import caviar.parser.Parser;
+import caviar.storage.Storage;
+import caviar.ui.Ui;
 
 /**
  * The main class for the Caviar chatbot application.
- * It talks to you, and acts as a interactive to-do list friend for you.
+ *
+ * <p>Caviar is an interactive task manager that allows users to add,
+ * manage, and store tasks with deadlines and events.</p>
  */
 public class Caviar {
     private final Ui ui;
@@ -20,7 +21,8 @@ public class Caviar {
     /**
      * Initializes the chatbot, loading tasks from storage if available.
      *
-     * @param filePath Path to the storage file.
+     * @param filePath The path to the storage file.
+     * @throws CaviarException If an error occurs while loading tasks.
      */
     public Caviar(String filePath) throws CaviarException {
         ui = new Ui();
@@ -37,6 +39,9 @@ public class Caviar {
 
     /**
      * Runs the main interaction loop of Caviar chatbot.
+     *
+     * <p>The chatbot continuously waits for user input and processes commands
+     * until the user inputs "bye".</p>
      */
     public void run() {
         ui.showWelcome();
@@ -62,12 +67,18 @@ public class Caviar {
         ui.close();
     }
 
+    /**
+     * Processes a user command and executes the corresponding action.
+     *
+     * @param input The command input from the user.
+     * @throws CaviarException If the command is invalid.
+     */
     private void processCommand(String input) throws CaviarException {
         Parser.parseAndExecute(input, taskList, ui, storage);
     }
 
     /**
-     * The main entry point of the application.
+     * The main entry point of the Caviar application.
      *
      * @param args Command-line arguments.
      */
@@ -75,6 +86,7 @@ public class Caviar {
         try {
             new Caviar("data/tasks.txt").run();
         } catch (CaviarException e) {
+            e.printStackTrace();
         }
     }
 }
