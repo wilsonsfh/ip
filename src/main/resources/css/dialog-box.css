@@ -1,0 +1,46 @@
+z.label {
+    -fx-background-color: #E6B8B7;
+    -fx-border-color: #B76E79;
+    -fx-border-width: 2px;
+    -fx-background-radius: 1em 1em 0 1em;
+    -fx-border-radius: 1em 1em 0 1em;
+    -fx-wrap-text: true;
+}
+
+.reply-label {
+    -fx-background-color: #E6B8B7;
+    -fx-border-color: #B76E79;
+    -fx-border-width: 2px;
+    -fx-background-radius: 1em 1em 1em 0;
+    -fx-border-radius: 1em 1em 1em 0;
+    -fx-wrap-text: true;
+}
+
+#displayPicture {
+    /* Shadow effect on image. */
+    -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
+
+    /* Change size of image. */
+    -fx-scale-x: 1;
+    -fx-scale-y: 1;
+
+    /* Rotate image clockwise by degrees. */
+    -fx-rotate: 0;
+}
+
+/* Removes or reduces default padding in the ScrollPane */
+.scroll-pane {
+    -fx-hbar-policy: never; /* Hide horizontal scrollbar */
+}
+
+/* Remove any extra padding inside the scrollable viewport */
+.scroll-pane .viewport {
+    -fx-padding: 0;
+}
+
+/* Align messages (the VBox) to the top-left and control spacing around them */
+#dialogContainer {
+    -fx-alignment: TOP_LEFT;  /* Ensures content is left-aligned */
+    -fx-padding: 10;         /* Adjust as needed for top/left space */
+    -fx-spacing: 10;         /* Vertical gap between messages */
+}

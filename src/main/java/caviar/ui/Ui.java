@@ -13,7 +13,7 @@ public class Ui {
     }
 
     /**
-     * Displays the welcome message.
+     * Displays the welcome message for CLI.
      */
     public void showWelcome() {
         System.out.println("Hello! I'm Caviar. Roe!");
@@ -21,6 +21,14 @@ public class Ui {
         System.out.println("______________________\n");
     }
 
+    /**
+     * Displays the welcome message for GUI.
+     */
+    public String showWelcomeGUI() {
+        return "Hello! I'm Caviar. Roe!\n"
+             + "What can I do for you?\n"
+             + "______________________\n";
+    }
     /**
      * Reads user input.
      * @return User command as a String.

@@ -1,5 +1,10 @@
-T | 0 | abc
+T | 1 | abc
 D | 0 | def | 2025-02-25 00:00
 T | 0 | ghi
 T | 0 | return book
 D | 0 | read book | 2025-02-25 00:00
+T | 0 | a
+T | 0 | sleep at 12am
+D | 0 | abc | 2025-02-28 00:00
+T | 0 | a
+T | 0 | list
