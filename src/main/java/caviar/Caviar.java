@@ -1,6 +1,8 @@
 package caviar;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.PrintStream;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 import caviar.parser.Parser;
@@ -38,7 +40,30 @@ public class Caviar {
     }
 
     /**
-     * Runs the main interaction loop of Caviar chatbot.
+     * Captures the output from parseAndExecute so it can be displayed in the GUI.
+     *
+     * @param input The user command
+     * @return The output text from parseAndExecute
+     */
+    public String getResponseFromCaviar(String input) {
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        PrintStream ps = new PrintStream(baos);
+        PrintStream oldOut = System.out;
+        System.setOut(ps);
+
+        try {
+            Parser.parseAndExecute(input, taskList, ui, storage);
+        } catch (CaviarException e) {
+            return e.getMessage();
+        } finally {
+            System.setOut(oldOut);
+        }
+
+        return baos.toString();
+    }
+
+    /**
+     * Runs the main interaction loop of CLI version for Caviar chatbot.
      *
      * <p>The chatbot continuously waits for user input and processes commands
      * until the user inputs "bye".</p>
