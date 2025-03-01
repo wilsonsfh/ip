@@ -8,7 +8,6 @@ import java.util.Scanner;
 import caviar.exception.CaviarException;
 import caviar.task.Task;
 
-
 /**
  * Manages storage of tasks by saving and loading them to/from a file.
  *
@@ -37,13 +36,7 @@ public class Storage {
      */
     public void save(ArrayList<Task> tasks) throws IOException {
         File file = new File(filePath);
-        File parentDir = file.getParentFile(); // Ensure the directory exists
-
-        if (parentDir != null && !parentDir.exists()) {
-            parentDir.mkdirs(); // Create missing folders
-            System.out.println("Roe..!! Created missing directory for tasks.");
-
-        }
+        createDirectoryIfMissing(file);
 
         FileWriter writer = new FileWriter(file);
         for (Task task : tasks) {
@@ -52,6 +45,13 @@ public class Storage {
         writer.close();
     }
 
+    private void createDirectoryIfMissing(File file) {
+        File parentDir = file.getParentFile();
+        if (parentDir != null && !parentDir.exists()) {
+            parentDir.mkdirs();
+            System.out.println("Roe..!! Created missing directory for tasks.");
+        }
+    }
 
     /**
      * Loads tasks from the storage file.
@@ -65,7 +65,7 @@ public class Storage {
         File file = new File(filePath);
 
         if (!file.exists()) {
-            return tasks; // Return empty list if file does not exist
+            return tasks;
         }
 
         Scanner scanner = new Scanner(file);

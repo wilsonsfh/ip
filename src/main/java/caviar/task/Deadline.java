@@ -30,43 +30,56 @@ public class Deadline extends Task {
         return by;
     }
 
-    /**
-     * Parses date-time from multiple possible formats.
-     *
-     * @param input The date-time string provided by the user.
-     * @return LocalDateTime representing the parsed date-time.
-     * @throws CaviarException if the input does not match any valid formats.
-     */
     private LocalDateTime parseDateTime(String input) throws CaviarException {
-        List<String> dateFormats = Arrays.asList("d/M/yyyy HHmm",    // 2/12/2019 1800
+        List<String> dateFormats = Arrays.asList(
+            "d/M/yyyy HHmm",    // 2/12/2019 1800
             "yyyy-MM-dd HHmm",  // 2024-02-13 1800
             "yyyy-MM-dd HH:mm", // 2024-02-13 18:00
             "yyyy-MM-dd",       // 2024-02-13 (Default time 00:00)
-            "MMM d yyyy h:mm a", // Dec 2 2019 6:00 PM
+            "MMM d yyyy h:mm a",// Dec 2 2019 6:00 PM
             "yyyy/MM/dd HH:mm"  // 2019/12/02 18:00
         );
 
         for (String format : dateFormats) {
-            try {
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
-                LocalDateTime dateTime = LocalDateTime.parse(input, formatter);
+            LocalDateTime dateTime = tryParseDateTime(input, format);
+            if (dateTime != null) {
                 return dateTime;
-            } catch (DateTimeParseException ignored) {
-                // Try next format
             }
         }
 
-        try {
-            LocalDate date = LocalDate.parse(input, DateTimeFormatter.ofPattern("yyyy-MM-dd"));
+        LocalDate date = tryParseDate(input, "yyyy-MM-dd");
+        if (date != null) {
             return date.atStartOfDay(); // Default time is 00:00
-        } catch (DateTimeParseException ignored) {
-            // Do nothing, throw an error below
         }
 
         throw new CaviarException("Please use a valid date format, roe..! Supported formats:\n"
-            + " - d/M/yyyy HHmm (e.g., 2/12/2019 1800)\n" + " - yyyy-MM-dd HHmm (e.g., 2024-02-13 1800)\n"
+            + " - d/M/yyyy HHmm (e.g., 2/12/2019 1800)\n"
+            + " - yyyy-MM-dd HHmm (e.g., 2024-02-13 1800)\n"
             + " - yyyy-MM-dd (e.g., 2024-02-13) (Default time 00:00)\n"
-            + " - MMM d yyyy h:mm a (e.g., Dec 2 2019 6:00 PM)\n" + " - yyyy/MM/dd HH:mm (e.g., 2019/12/02 18:00)");
+            + " - MMM d yyyy h:mm a (e.g., Dec 2 2019 6:00 PM)\n"
+            + " - yyyy/MM/dd HH:mm (e.g., 2019/12/02 18:00)");
+    }
+
+    private LocalDateTime tryParseDateTime(String input, String format) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            return LocalDateTime.parse(input, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    private LocalDate tryParseDate(String input, String format) {
+        try {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern(format);
+            return LocalDate.parse(input, formatter);
+        } catch (DateTimeParseException e) {
+            return null;
+        }
+    }
+
+    public boolean isDueOn(LocalDate date) {
+        return by.toLocalDate().equals(date);
     }
 
     @Override
@@ -77,7 +90,8 @@ public class Deadline extends Task {
 
     @Override
     public String toStorageString() {
-        return "D | " + (isDone ? "1" : "0") + " | " + description + " | "
+        String status = isDone ? "1" : "0";
+        return "D | " + status + " | " + description + " | "
             + by.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm"));
     }
 }

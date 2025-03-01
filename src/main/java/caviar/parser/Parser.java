@@ -1,6 +1,5 @@
 package caviar.parser;
 
-import java.util.List;
 import caviar.command.TaskList;
 import caviar.exception.CaviarException;
 import caviar.storage.Storage;
@@ -15,87 +14,95 @@ import caviar.ui.Ui;
  */
 public class Parser {
 
-    /**
-     * Parses and executes the user input.
-     *
-     * @param input    The user input command.
-     * @param taskList The list of tasks.
-     * @param ui       The UI instance for interaction.
-     * @param storage  The storage handler.
-     * @throws CaviarException if the command is invalid.
-     */
     public static void parseAndExecute(String input, TaskList taskList, Ui ui, Storage storage) throws CaviarException {
-        String[] parts = input.split(" ", 2);
+        assert input != null : "Command input cannot be null";
+        assert taskList != null : "TaskList cannot be null";
+        assert ui != null : "Ui cannot be null";
+        assert storage != null : "Storage cannot be null";
 
-        switch (parts[0]) {
+        String[] parts = input.split(" ", 2);
+        String command = parts[0];
+        String arguments = (parts.length > 1) ? parts[1] : "";
+
+        switch (command) {
         case "bye":
-            ui.showMessage("Roe. Hope to see you again soon!");
+            handleBye(ui);
             System.exit(0);
             break;
         case "list":
-            taskList.listTasks();
+            handleList(taskList);
             break;
         case "todo":
-            if (parts.length < 2) {
-                throw new CaviarException("The description of a todo cannot be empty.");
-            }
-            taskList.addTask(new Todo(parts[1]));
-            break;
-        case "deadline":
-            if (parts.length < 2 || !parts[1].contains(" /by ")) {
-                throw new CaviarException("The deadline format is incorrect! Use: deadline <task> /by <date>.");
-            }
-            String[] deadlineParts = parts[1].split(" /by ", 2);
-            taskList.addTask(new Deadline(deadlineParts[0], deadlineParts[1]));
-            break;
-        case "event":
-            if (parts.length < 2 || !parts[1].contains(" /from ") || !parts[1].contains(" /to ")) {
-                throw new CaviarException("The event format is incorrect! Use: event <task> /from <start> /to <end>.");
-            }
-            String[] eventParts = parts[1].split(" /from | /to ", 3);
-            taskList.addTask(new Event(eventParts[0], eventParts[1], eventParts[2]));
-            break;
-        case "find":
-            if (parts.length < 2) {
-                throw new CaviarException("roe..!! Please specify a keyword to search.");
-            }
-            String keyword = parts[1];
-            List<Task> foundTasks = taskList.findTasks(keyword);
-            if (foundTasks.isEmpty()) {
-                ui.showMessage("Roe..!! No matching tasks found.");
-            } else {
-                ui.showMessage("Roe! Here are the matching tasks:");
-                for (int i = 0; i < foundTasks.size(); i++) {
-                    ui.showMessage("    " + (i + 1) + ". " + foundTasks.get(i));
-                }
-            }
-            break;
-        case "mark":
-            if (parts.length < 2) {
-                throw new CaviarException("Mark which task? roe..!!");
-            }
-            int markIndex = Integer.parseInt(parts[1]) - 1;
-            taskList.markTask(markIndex);
-            break;
-        case "unmark":
-            if (parts.length < 2) {
-                throw new CaviarException("Unmark which task? roe..!!");
-            }
-            int unmarkIndex = Integer.parseInt(parts[1]) - 1;
-            taskList.unmarkTask(unmarkIndex);
+            handleTodo(arguments, taskList);
             break;
         case "delete":
-            if (parts.length < 2) {
-                throw new CaviarException("Delete which task? roe..!!");
-            }
-            int deleteIndex = Integer.parseInt(parts[1]) - 1;
-            taskList.deleteTask(deleteIndex);
+            handleDelete(arguments, taskList);
+            break;
+        case "find":
+            handleFind(arguments, taskList);
+            break;
+        case "date":
+            handleDate(arguments, taskList);
             break;
         default:
             throw new CaviarException("I don't understand roe..?");
         }
+        saveData(taskList, storage, ui);
+    }
 
-        // Save after every change
+    private static String handleBye(Ui ui) {
+        ui.showMessage("Roe. Hope to see you again soon!");
+        return "bye";
+    }
+
+    private static void handleList(TaskList taskList) {
+        taskList.listTasks();
+    }
+
+    private static void handleTodo(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.trim().isEmpty()) {
+            throw new CaviarException("The description of a todo cannot be empty.");
+        }
+        taskList.addTask(new Todo(arguments));
+    }
+
+    private static void handleDelete(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.trim().isEmpty()) {
+            throw new CaviarException("Please specify the task number to delete.");
+        }
+        try {
+            int index = Integer.parseInt(arguments.trim());
+            taskList.deleteTask(index - 1);
+        } catch (NumberFormatException e) {
+            throw new CaviarException("Invalid task number format.");
+        }
+    }
+
+    private static void handleFind(String arguments, TaskList taskList) {
+        if (arguments.trim().isEmpty()) {
+            System.out.println("Please specify a keyword to find tasks.");
+            return;
+        }
+        java.util.List<Task> matchingTasks = taskList.findTasks(arguments.trim());
+        if (matchingTasks.isEmpty()) {
+            System.out.println("No matching tasks found.");
+        } else {
+            System.out.println("Here are the matching tasks in your list:");
+            for (int i = 0; i < matchingTasks.size(); i++) {
+                System.out.println((i + 1) + ". " + matchingTasks.get(i));
+            }
+        }
+    }
+
+    private static void handleDate(String arguments, TaskList taskList) {
+        if (arguments.trim().isEmpty()) {
+            System.out.println("Please specify a date in yyyy-MM-dd format.");
+            return;
+        }
+        taskList.showTasksOnDate(arguments.trim());
+    }
+
+    private static void saveData(TaskList taskList, Storage storage, Ui ui) {
         try {
             storage.save(taskList.getTasks());
         } catch (Exception e) {
