@@ -7,4 +7,3 @@ T | 0 | a
 T | 0 | sleep at 12am
 D | 0 | abc | 2025-02-28 00:00
 T | 0 | a
-T | 0 | list

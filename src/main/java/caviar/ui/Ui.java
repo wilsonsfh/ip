@@ -26,9 +26,10 @@ public class Ui {
      */
     public String showWelcomeGUI() {
         return "Hello! I'm Caviar. Roe!\n"
-             + "What can I do for you?\n"
-             + "______________________\n";
+            + "What can I do for you?\n"
+            + "______________________\n";
     }
+
     /**
      * Reads user input.
      * @return User command as a String.
@@ -52,9 +53,6 @@ public class Ui {
         System.out.println("______________________");
     }
 
-    /**
-     * Closes the scanner.
-     */
     public void close() {
         scanner.close();
     }

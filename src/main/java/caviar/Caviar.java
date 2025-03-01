@@ -27,8 +27,47 @@ public class Caviar {
      * @throws CaviarException If an error occurs while loading tasks.
      */
     public Caviar(String filePath) throws CaviarException {
+        assert filePath != null && !filePath.isEmpty() : "File path must not be null or empty";
+
         ui = new Ui();
         storage = new Storage(filePath);
+
+        taskList = loadTaskListSafely();
+        assert taskList != null : "TaskList should never be null after initialization";
+    }
+
+    /**
+     * Runs the main interaction loop of CLI version for Caviar chatbot.
+     *
+     * <p>The chatbot continuously waits for user input and processes commands
+     * until the user inputs "bye".</p>
+     */
+    public void run() {
+        ui.showWelcome();
+        mainLoop();
+        ui.close();
+    }
+
+    private void mainLoop() {
+        while (true) {
+            try {
+                String input = readUserInput();
+                if (isBye(input)) {
+                    ui.showMessage("Roe. Hope to see you again soon!");
+                    break;
+                }
+                processInput(input);
+            } catch (NumberFormatException e) {
+                ui.showMessage("roe..!! Invalid number format.");
+            } catch (CaviarException e) {
+                ui.showMessage(e.getMessage());
+            } catch (Exception e) {
+                ui.showMessage("roe..!! Something went wrong.");
+            }
+        }
+    }
+
+    private TaskList loadTaskListSafely() throws CaviarException {
         TaskList tempTaskList;
         try {
             tempTaskList = new TaskList(storage);
@@ -36,7 +75,26 @@ public class Caviar {
             ui.showMessage("Roe..? Error loading tasks.");
             tempTaskList = new TaskList();
         }
-        taskList = tempTaskList;
+        return tempTaskList;
+    }
+
+    private String readUserInput() {
+        String input = ui.readCommand();
+        assert input != null : "User input must not be null";
+        return input;
+    }
+
+    private void processInput(String input) throws CaviarException {
+        if ("list".equals(input)) {
+            taskList.listTasks();
+        } else {
+            Parser.parseAndExecute(input, taskList, ui, storage);
+        }
+    }
+
+    private boolean isBye(String input) {
+        boolean isByeCommand = "bye".equalsIgnoreCase(input);
+        return isByeCommand;
     }
 
     /**
@@ -60,46 +118,6 @@ public class Caviar {
         }
 
         return baos.toString();
-    }
-
-    /**
-     * Runs the main interaction loop of CLI version for Caviar chatbot.
-     *
-     * <p>The chatbot continuously waits for user input and processes commands
-     * until the user inputs "bye".</p>
-     */
-    public void run() {
-        ui.showWelcome();
-        while (true) {
-            try {
-                String input = ui.readCommand();
-                if (input.equals("bye")) {
-                    ui.showMessage("Roe. Hope to see you again soon!");
-                    break;
-                } else if (input.equals("list")) {
-                    taskList.listTasks();
-                } else {
-                    processCommand(input);
-                }
-            } catch (CaviarException e) {
-                ui.showMessage(e.getMessage());
-            } catch (NumberFormatException e) {
-                ui.showMessage("roe..!! Invalid number format.");
-            } catch (Exception e) {
-                ui.showMessage("roe..!! Something went wrong.");
-            }
-        }
-        ui.close();
-    }
-
-    /**
-     * Processes a user command and executes the corresponding action.
-     *
-     * @param input The command input from the user.
-     * @throws CaviarException If the command is invalid.
-     */
-    private void processCommand(String input) throws CaviarException {
-        Parser.parseAndExecute(input, taskList, ui, storage);
     }
 
     /**

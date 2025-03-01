@@ -3,7 +3,7 @@ package caviar.gui;
 import caviar.Caviar;
 import caviar.exception.CaviarException;
 import caviar.parser.Parser;
-import caviar.ui.Ui;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -11,7 +11,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-
+import javafx.stage.Stage;
 
 /**
  * Controller for the main GUI of Caviar.
@@ -28,48 +28,85 @@ public class MainWindow extends AnchorPane {
 
     private Caviar caviar;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.jpg"));
-    private Image caviarImage = new Image(this.getClass().getResourceAsStream("/images/Caviar.png"));
+    private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.jpg"));
+    private final Image caviarImage = new Image(this.getClass().getResourceAsStream("/images/Caviar.png"));
 
     @FXML
     public void initialize() {
-        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
-        this.greetUser();
+        bindScrollPaneToDialogContainer();
+        displayWelcomeMessage();
     }
 
     /**
      * Sets the Caviar instance to interact with.
      *
-     * @param caviar The chatbot instance.
+     * @param c The chatbot instance.
      */
-    public void setCaviar(Caviar caviar) {
-        this.caviar = caviar;
-    }
-    /**
-     * Handles user input when "Enter" or "Send" is pressed.
-     */
-
-    /**
-     * Shows welcome message to user when GUI is launched
-     */
-    private void greetUser() {
-        Ui ui = new Ui();
-        String greeting = ui.showWelcomeGUI();
-        dialogContainer.getChildren().add(
-            DialogBox.getCaviarDialog(greeting, caviarImage)
-        );
+    public void setCaviar(Caviar c) {
+        this.caviar = c;
     }
 
     @FXML
     private void handleUserInput() {
-        String input = userInput.getText();
-
+        String input = getUserInput();
         String response = caviar.getResponseFromCaviar(input);
-        dialogContainer.getChildren().addAll(
-            DialogBox.getUserDialog(input, userImage),
-            DialogBox.getCaviarDialog(response, caviarImage)
-        );
+
+        displayUserMessage(input);
+
+        if (isBye(response)) {
+            displayExitMessage();
+            closeWindow();
+            return;
+        }
+
+        displayCaviarMessage(response);
+        clearUserInput();
+    }
+
+    private void displayWelcomeMessage() {
+        String welcomeMessage = "Hello! I'm Caviar. Roe!\nWhat can I do for you?";
+        displayCaviarMessage(welcomeMessage);
+    }
+
+    /**
+     * Binds the scrollPane to follow dialogContainer height.
+     */
+    private void bindScrollPaneToDialogContainer() {
+        scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
+    }
+
+    private String getUserInput() {
+        String input = userInput.getText().trim();
+
+        return input;
+    }
+
+    private boolean isBye(String response) {
+        return "bye".equalsIgnoreCase(response);
+    }
+
+    private void displayUserMessage(String message) {
+        addDialog(message, userImage);
+    }
+
+    private void displayCaviarMessage(String message) {
+        addDialog(message, caviarImage);
+    }
+
+    private void displayExitMessage() {
+        displayCaviarMessage("Roe. Hope to see you again soon!");
+    }
+
+    private void clearUserInput() {
         userInput.clear();
     }
 
+    private void addDialog(String message, Image image) {
+        dialogContainer.getChildren().add(DialogBox.getCaviarDialog(message, image));
+    }
+
+    private void closeWindow() {
+        Stage stage = (Stage) sendButton.getScene().getWindow();
+        stage.close();
+    }
 }
