@@ -1,6 +1,6 @@
 .root {
-    main-color: #F8F8FF;
-    -fx-background-color: main-color;
+    /* A pastel green background for the entire app window */
+    -fx-background-color: #D8FEE2;
 }
 
 .text-field {
@@ -14,52 +14,11 @@
     -fx-background-color: #D3D3D3;
     -fx-font: bold 16px "Arial";
 }
-
 .button:hover {
     -fx-background-color: #E0E0E0;
-    -fx-font-size: 16px;
 }
-
 .button:pressed {
     -fx-background-color: #A9A9A9;
-    -fx-font-size: 16px;
 }
 
-.scroll-pane,
-.scroll-pane .viewport {
-    -fx-background-color: transparent;
-}
-
-.scroll-bar {
-    -fx-font-size: 10px;  /* Change width of scroll bar. */
-    -fx-background-color: main-color;
-}
-
-.scroll-bar .thumb {
-    -fx-background-color: #C0C0C0;
-    -fx-background-radius: 1em;
-}
-
-/* Hides the increment and decrement buttons. */
-.scroll-bar .increment-button,
-.scroll-bar .decrement-button {
-    -fx-pref-height: 0;
-    -fx-opacity: 0;
-}
-
-/* Removes or reduces default padding in the ScrollPane */
-.scroll-pane {
-    -fx-hbar-policy: never; /* Hide horizontal scrollbar */
-}
-
-/* Remove any extra padding inside the scrollable viewport */
-.scroll-pane .viewport {
-    -fx-padding: 0;
-}
-
-/* Align messages (the VBox) to the top-left and control spacing around them */
-#dialogContainer {
-    -fx-alignment: TOP_LEFT;  /* Ensures content is left-aligned */
-    -fx-padding: 10;         /* Adjust as needed for top/left space */
-    -fx-spacing: 10;         /* Vertical gap between messages */
-}
+/* If you have leftover .scroll-pane rules, unify them or remove duplicates. */

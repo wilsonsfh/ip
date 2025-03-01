@@ -76,9 +76,7 @@ public class MainWindow extends AnchorPane {
     }
 
     private String getUserInput() {
-        String input = userInput.getText().trim();
-
-        return input;
+        return userInput.getText().trim();
     }
 
     private boolean isBye(String response) {
@@ -86,11 +84,11 @@ public class MainWindow extends AnchorPane {
     }
 
     private void displayUserMessage(String message) {
-        addDialog(message, userImage);
+        addUserDialog(message, userImage);
     }
 
     private void displayCaviarMessage(String message) {
-        addDialog(message, caviarImage);
+        addCaviarDialog(message, caviarImage);
     }
 
     private void displayExitMessage() {
@@ -101,7 +99,11 @@ public class MainWindow extends AnchorPane {
         userInput.clear();
     }
 
-    private void addDialog(String message, Image image) {
+    private void addUserDialog(String message, Image image) {
+        dialogContainer.getChildren().add(DialogBox.getUserDialog(message, image));
+    }
+
+    private void addCaviarDialog(String message, Image image) {
         dialogContainer.getChildren().add(DialogBox.getCaviarDialog(message, image));
     }
 

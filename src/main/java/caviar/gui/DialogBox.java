@@ -34,26 +34,30 @@ public class DialogBox extends HBox {
         displayPicture.setImage(img);
     }
 
+    private void ensureRight() {
+        setAlignment(Pos.TOP_RIGHT);
+    }
+
     private void flip() {
         ObservableList<Node> tmp = FXCollections.observableArrayList(getChildren());
         FXCollections.reverse(tmp);
         getChildren().setAll(tmp);
         setAlignment(Pos.TOP_LEFT);
-        dialog.getStyleClass().add("reply-label");
+        dialog.getStyleClass().add("bot-label");
 
     }
 
     public static DialogBox getUserDialog(String text, Image img) {
         var db = new DialogBox(text, img);
-        db.dialog.getStyleClass().add("label");
+        db.ensureRight();
+        db.dialog.getStyleClass().add("user-label");
         return db;
     }
 
     public static DialogBox getCaviarDialog(String text, Image img) {
         var db = new DialogBox(text, img);
-        db.flip(); // flips alignment
-        // Add bot bubble style
-        db.dialog.getStyleClass().add("reply-label");
+        db.flip();
+        db.dialog.getStyleClass().add("bot-label");
         return db;
     }
 }

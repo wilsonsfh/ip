@@ -1,46 +1,44 @@
-z.label {
-    -fx-background-color: #E6B8B7;
+.bot-label {
+    /* A pastel teal bubble for bot messages */
+    -fx-background-color: #C8F4F9; /* Example pastel teal */
+    -fx-border-color: #70B8BF;
+    -fx-border-width: 2px;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-padding: 10;        /* Internal padding around text */
+    -fx-wrap-text: true;    /* Ensure text wraps if it’s long */
+}
+
+.user-label {
+    /* A pastel pink bubble for user messages */
+    -fx-background-color: #FFD9E8;
     -fx-border-color: #B76E79;
     -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 0 1em;
-    -fx-border-radius: 1em 1em 0 1em;
+    -fx-background-radius: 15;
+    -fx-border-radius: 15;
+    -fx-padding: 10;
     -fx-wrap-text: true;
 }
 
-.reply-label {
-    -fx-background-color: #E6B8B7;
-    -fx-border-color: #B76E79;
-    -fx-border-width: 2px;
-    -fx-background-radius: 1em 1em 1em 0;
-    -fx-border-radius: 1em 1em 1em 0;
-    -fx-wrap-text: true;
-}
-
+/* Keep your image styling if you want a shadow, etc. */
 #displayPicture {
-    /* Shadow effect on image. */
     -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0.5, 5, 5);
-
-    /* Change size of image. */
     -fx-scale-x: 1;
     -fx-scale-y: 1;
-
-    /* Rotate image clockwise by degrees. */
     -fx-rotate: 0;
 }
 
-/* Removes or reduces default padding in the ScrollPane */
+/* Keep or remove repeated scroll-pane rules as needed. */
 .scroll-pane {
-    -fx-hbar-policy: never; /* Hide horizontal scrollbar */
+    -fx-hbar-policy: never;
 }
-
-/* Remove any extra padding inside the scrollable viewport */
 .scroll-pane .viewport {
     -fx-padding: 0;
 }
 
-/* Align messages (the VBox) to the top-left and control spacing around them */
+/* Align the VBox of messages to the top-left with spacing */
 #dialogContainer {
-    -fx-alignment: TOP_LEFT;  /* Ensures content is left-aligned */
-    -fx-padding: 10;         /* Adjust as needed for top/left space */
-    -fx-spacing: 10;         /* Vertical gap between messages */
+    -fx-alignment: TOP_LEFT;
+    -fx-padding: 10;
+    -fx-spacing: 10;
 }

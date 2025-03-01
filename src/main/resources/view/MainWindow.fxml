@@ -24,10 +24,12 @@
                 prefWidth="76.0"
                 text="Send"/>
         <ScrollPane fx:id="scrollPane"
+                    fitToWidth="true"
                     prefHeight="557.0"
                     prefWidth="400.0">
             <content>
-                <VBox fx:id="dialogContainer"/>
+                <VBox fx:id="dialogContainer"
+                      fillWidth="true"/>
             </content>
         </ScrollPane>
     </children>
