@@ -255,6 +255,59 @@ public class TaskList {
         };
     }
 
+    public void sortTasksByType(String type, int option) {
+        if (!isValidType(type)) {
+            System.out.println("Unknown task type. Use 'todo', 'deadline', or 'event'.");
+            return;
+        }
+        if (option != 1 && option != 2) {
+            System.out.println("Invalid sort option. Please enter 1 or 2.");
+            return;
+        }
+
+        // 1) Collect tasks of the chosen type
+        List<Task> filteredTasks = filterTasksByType(type);
+
+        // 2) Sort them using the same base comparator
+        Comparator<Task> baseComparator = buildBaseComparator();
+        if (option == 2) {
+            baseComparator = baseComparator.reversed();
+        }
+        filteredTasks.sort(baseComparator);
+
+        // 3) Print them
+        printFilteredTasks(filteredTasks, type, option);
+    }
+
+    private boolean isValidType(String type) {
+        return type.equals("todo") || type.equals("deadline") || type.equals("event");
+    }
+
+    private List<Task> filterTasksByType(String type) {
+        List<Task> result = new ArrayList<>();
+        for (Task t : tasks) {
+            if (type.equals("todo") && t instanceof caviar.task.Todo) {
+                result.add(t);
+            } else if (type.equals("deadline") && t instanceof caviar.task.Deadline) {
+                result.add(t);
+            } else if (type.equals("event") && t instanceof caviar.task.Event) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    private void printFilteredTasks(List<Task> filtered, String type, int option) {
+        if (filtered.isEmpty()) {
+            System.out.println("No " + type + " tasks found to sort.");
+            return;
+        }
+        String orderName = (option == 1) ? "chronologically, A→Z" : "reverse, Z→A";
+        System.out.println("Here are your " + type + " tasks sorted (" + orderName + "):");
+        for (int i = 0; i < filtered.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + filtered.get(i));
+        }
+    }
     private void printSortedTasks() {
         System.out.println("Here are your tasks after sorting:");
         for (int i = 0; i < tasks.size(); i++) {
