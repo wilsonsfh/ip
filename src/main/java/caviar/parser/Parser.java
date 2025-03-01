@@ -32,8 +32,20 @@ public class Parser {
         case "list":
             handleList(taskList);
             break;
+        case "mark":
+            handleMark(arguments, taskList);
+            break;
+        case "unmark":
+            handleUnmark(arguments, taskList);
+            break;
         case "todo":
             handleTodo(arguments, taskList);
+            break;
+        case "deadline": // NEW
+            handleDeadline(arguments, taskList);
+            break;
+        case "event": // NEW
+            handleEvent(arguments, taskList);
             break;
         case "delete":
             handleDelete(arguments, taskList);
@@ -62,11 +74,76 @@ public class Parser {
         taskList.listTasks();
     }
 
+    private static void handleMark(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.isEmpty()) {
+            throw new CaviarException("Please specify the task number to mark.");
+        }
+        try {
+            int index = Integer.parseInt(arguments);
+            taskList.markTask(index - 1); // Convert 1-based user input to 0-based index
+        } catch (NumberFormatException e) {
+            throw new CaviarException("Invalid task number format.");
+        }
+    }
+
+    private static void handleUnmark(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.isEmpty()) {
+            throw new CaviarException("Please specify the task number to unmark.");
+        }
+        try {
+            int index = Integer.parseInt(arguments);
+            taskList.unmarkTask(index - 1); // Convert 1-based user input to 0-based index
+        } catch (NumberFormatException e) {
+            throw new CaviarException("Invalid task number format.");
+        }
+    }
+
     private static void handleTodo(String arguments, TaskList taskList) throws CaviarException {
         if (arguments.trim().isEmpty()) {
             throw new CaviarException("The description of a todo cannot be empty.");
         }
         taskList.addTask(new Todo(arguments));
+    }
+
+    private static void handleDeadline(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.isEmpty()) {
+            throw new CaviarException("The description of a deadline cannot be empty.");
+        }
+
+        // e.g., "return book /by 2025-02-18 1800"
+        String[] parts = arguments.split(" /by ", 2);
+        if (parts.length < 2) {
+            throw new CaviarException("Please specify '/by' for deadline. Example:\n"
+                + "  deadline return book /by 2025-02-18 1800");
+        }
+
+        String description = parts[0].trim();
+        String by = parts[1].trim();
+        taskList.addTask(new Deadline(description, by));
+    }
+
+    private static void handleEvent(String arguments, TaskList taskList) throws CaviarException {
+        if (arguments.isEmpty()) {
+            throw new CaviarException("The description of an event cannot be empty.");
+        }
+
+        // e.g., "project meeting /from 2025-03-01 10:00 /to 2025-03-01 12:00"
+        String[] fromParts = arguments.split(" /from ", 2);
+        if (fromParts.length < 2) {
+            throw new CaviarException("Please specify '/from' for event. Example:\n"
+                + "  event project meeting /from 2025-03-01 10:00 /to 2025-03-01 12:00");
+        }
+
+        String description = fromParts[0].trim();
+        String[] toParts = fromParts[1].split(" /to ", 2);
+        if (toParts.length < 2) {
+            throw new CaviarException("Please specify '/to' for event. Example:\n"
+                + "  event project meeting /from 2025-03-01 10:00 /to 2025-03-01 12:00");
+        }
+
+        String from = toParts[0].trim();
+        String to = toParts[1].trim();
+        taskList.addTask(new Event(description, from, to));
     }
 
     private static void handleDelete(String arguments, TaskList taskList) throws CaviarException {

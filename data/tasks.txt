@@ -1,9 +1,11 @@
-D | 0 | def | 2025-02-25 00:00
-D | 0 | read book | 2025-02-25 00:00
-D | 0 | abc | 2025-02-28 00:00
-T | 0 | a
-T | 0 | a
-T | 1 | abc
-T | 0 | ghi
+D | 1 | Electricity bills contract end | 2025-02-25 00:00
+D | 0 | Read book Man-Month | 2025-02-25 00:00
+D | 0 | Marathon X D-day | 2025-02-28 00:00
+T | 0 | buy groceries today
+T | 0 | clean floor
+T | 0 | meet friend today
 T | 0 | return book
+T | 0 | run tomorrow
 T | 0 | sleep at 12am
+D | 0 | MA1301 | 2025-02-18 00:00
+E | 0 | Gala | 2025-03-01 10:00 | 2025-03-01 12:00
