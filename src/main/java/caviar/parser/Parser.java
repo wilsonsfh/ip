@@ -44,6 +44,9 @@ public class Parser {
         case "date":
             handleDate(arguments, taskList);
             break;
+        case "sort":
+            handleSort(arguments, taskList);
+            break;
         default:
             throw new CaviarException("I don't understand roe..?");
         }
@@ -100,6 +103,53 @@ public class Parser {
             return;
         }
         taskList.showTasksOnDate(arguments.trim());
+    }
+
+    private static void handleSort(String arguments, TaskList taskList) {
+        if (arguments.isEmpty()) {
+            printSortOptions();
+            return;
+        }
+
+        String[] parts = arguments.split("\\s+", 2);
+        // If user typed only one token (e.g. "1" or "2"), do the existing "sort all" approach
+        if (parts.length == 1) {
+            handleSortAll(parts[0], taskList);
+            return;
+        }
+
+        // Otherwise, user typed two tokens: e.g. "deadline 1"
+        String type = parts[0].toLowerCase();
+        String optionStr = parts[1];
+
+        try {
+            int option = Integer.parseInt(optionStr);
+            taskList.sortTasksByType(type, option);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid sort option. Please enter 1 or 2.");
+        }
+    }
+
+    private static void handleSortAll(String optionStr, TaskList taskList) {
+        try {
+            int option = Integer.parseInt(optionStr);
+            taskList.sortTasksByOption(option);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid sort option. Please enter either\n"
+                + "sort 1\n or"
+                + "sort 2");
+        }
+    }
+
+    private static void printSortOptions() {
+        System.out.println("Sort options:\n"
+            + "Sort all\n"
+            + " i.e. sort 1\n"
+            + "      sort 2\n"
+            + "Or sort a specific type:\n"
+            + "  sort todo 1\n"
+            + "  sort deadline 2\n"
+            + "  sort event 1");
     }
 
     private static void saveData(TaskList taskList, Storage storage, Ui ui) {

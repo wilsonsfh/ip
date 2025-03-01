@@ -2,12 +2,15 @@ package caviar.command;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import caviar.exception.CaviarException;
 import caviar.storage.Storage;
 import caviar.task.Deadline;
+import caviar.task.Event;
 import caviar.task.Task;
 
 /**
@@ -123,6 +126,15 @@ public class TaskList {
     }
 
     /**
+     * Validates the index for mark/unmark/delete.
+     */
+    private void validateIndex(int index) throws CaviarException {
+        if (index < 0 || index >= tasks.size()) {
+            throw new CaviarException("No such task exists, roe..!!");
+        }
+    }
+
+    /**
      * Removes a task from the list based on its index.
      *
      * <p>If the storage is available, this method also updates the tasks in the
@@ -154,8 +166,13 @@ public class TaskList {
      * @throws IOException If an I/O error occurs while writing tasks to the storage file.
      */
     public void saveTasks() throws IOException {
-        if (storage != null) {
+        if (storage == null) {
+            return;
+        }
+        try {
             storage.save(tasks);
+        } catch (IOException e) {
+            System.out.println("roe..!! Error saving task.");
         }
     }
 
@@ -182,6 +199,120 @@ public class TaskList {
      */
     public ArrayList<Task> getTasks() {
         return tasks;
+    }
+
+    /**
+     * Sorts tasks by a user-chosen option:
+     *   1 = chronologically, A→Z
+     *   2 = reverse, Z→A
+     */
+    public void sortTasksByOption(int option) {
+        if (option != 1 && option != 2) {
+            System.out.println("Invalid sort option. Please enter 1 or 2.");
+            return;
+        }
+
+        // User want chronological order with option 1
+        Comparator<Task> baseComparator = buildBaseComparator();
+
+        // User want reversed chronological order with option 2
+        if (option == 2) {
+            baseComparator = baseComparator.reversed();
+        }
+
+        tasks.sort(baseComparator);
+        printSortedTasks();
+    }
+
+    private LocalDateTime getDateTimeIfAny(Task t) {
+        if (t instanceof Deadline) {
+            return ((Deadline) t).getBy();
+        } else if (t instanceof Event) {
+            return ((Event) t).getFrom();
+        }
+        return null; // Todo has no date/time
+    }
+
+    private Comparator<Task> buildBaseComparator() {
+        return (t1, t2) -> {
+            LocalDateTime dt1 = getDateTimeIfAny(t1);
+            LocalDateTime dt2 = getDateTimeIfAny(t2);
+
+            // Compare both tasks that has date/time
+            if (dt1 != null && dt2 != null) {
+                return dt1.compareTo(dt2);
+            }
+            // One task out of the two has date/time, then it goes first
+            if (dt1 != null && dt2 == null) {
+                return -1;
+            }
+            if (dt1 == null && dt2 != null) {
+                return 1;
+            }
+
+            // Default, compare by description
+            return t1.getDescription().compareToIgnoreCase(t2.getDescription());
+        };
+    }
+
+    public void sortTasksByType(String type, int option) {
+        if (!isValidType(type)) {
+            System.out.println("Unknown task type. Use 'todo', 'deadline', or 'event'.");
+            return;
+        }
+        if (option != 1 && option != 2) {
+            System.out.println("Invalid sort option. Please enter 1 or 2.");
+            return;
+        }
+
+        // 1) Collect tasks of the chosen type
+        List<Task> filteredTasks = filterTasksByType(type);
+
+        // 2) Sort them using the same base comparator
+        Comparator<Task> baseComparator = buildBaseComparator();
+        if (option == 2) {
+            baseComparator = baseComparator.reversed();
+        }
+        filteredTasks.sort(baseComparator);
+
+        // 3) Print them
+        printFilteredTasks(filteredTasks, type, option);
+    }
+
+    private boolean isValidType(String type) {
+        return type.equals("todo") || type.equals("deadline") || type.equals("event");
+    }
+
+    private List<Task> filterTasksByType(String type) {
+        List<Task> result = new ArrayList<>();
+        for (Task t : tasks) {
+            if (type.equals("todo") && t instanceof caviar.task.Todo) {
+                result.add(t);
+            } else if (type.equals("deadline") && t instanceof caviar.task.Deadline) {
+                result.add(t);
+            } else if (type.equals("event") && t instanceof caviar.task.Event) {
+                result.add(t);
+            }
+        }
+        return result;
+    }
+
+    private void printFilteredTasks(List<Task> filtered, String type, int option) {
+        if (filtered.isEmpty()) {
+            System.out.println("No " + type + " tasks found to sort.");
+            return;
+        }
+        String orderName = (option == 1) ? "chronologically, A→Z" : "reverse, Z→A";
+        System.out.println("Here are your " + type + " tasks sorted (" + orderName + "):");
+        for (int i = 0; i < filtered.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + filtered.get(i));
+        }
+    }
+    private void printSortedTasks() {
+        System.out.println("Here are your tasks after sorting:");
+        for (int i = 0; i < tasks.size(); i++) {
+            System.out.println("  " + (i + 1) + ". " + tasks.get(i));
+        }
     }
 
     /**
