@@ -44,6 +44,9 @@ public class Parser {
         case "date":
             handleDate(arguments, taskList);
             break;
+        case "sort":
+            handleSort(arguments, taskList);
+            break;
         default:
             throw new CaviarException("I don't understand roe..?");
         }
@@ -100,6 +103,24 @@ public class Parser {
             return;
         }
         taskList.showTasksOnDate(arguments.trim());
+    }
+
+    private static void handleSort(String arguments, TaskList taskList) {
+        // If no arguments, remind the user of the two options
+        if (arguments.isEmpty()) {
+            System.out.println("Sort options:\n"
+                + "Key in with number 1 or 2 after \"sort\"\n"
+                + "e.g. sort 1\n"
+                + "1) chronologically, A to Z\n"
+                + "2) reverse, Z to A");
+            return;
+        }
+        try {
+            int option = Integer.parseInt(arguments.trim());
+            taskList.sortTasksByOption(option);
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid sort option. Please enter 1 or 2.");
+        }
     }
 
     private static void saveData(TaskList taskList, Storage storage, Ui ui) {

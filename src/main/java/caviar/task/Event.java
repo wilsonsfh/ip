@@ -85,6 +85,10 @@ public class Event extends Task {
             + " to: " + to.format(displayFormat) + ")";
     }
 
+    public LocalDateTime getFrom() {
+        return from;
+    }
+
     @Override
     public String toStorageString() {
         String status = isDone ? "1" : "0";
