@@ -16,16 +16,18 @@ public class Parser {
 
     /**
      * Parses the user input and executes the corresponding command.
+     * <p>
+     * This method extracts the command keyword from the user input and its arguments.
+     * It executes the commands with {@link #executeCommand(String, String, TaskList, Ui)}.
+     * After execution, it ensures the updated task list is saved via {@code saveData()}.
+     * If an invalid command is entered, a {@code CaviarException} is thrown.
+     * </p>
      *
-     * <p>This method interprets the input string to determine the command issued by the user
-     * and invokes the appropriate handler method. It supports commands such as adding tasks,
-     * marking tasks as done, listing tasks, and exiting the application.</p>
-     *
-     * @param input    The full command input entered by the user.
-     * @param taskList The current list of tasks.
-     * @param ui       The user interface instance for interacting with the user.
-     * @param storage  The storage handler for reading and writing task data.
-     * @throws CaviarException If the command is unrecognized or an error occurs during execution.
+     * @param input    The full command string entered by the user.
+     * @param taskList The {@code TaskList} instance containing all tasks.
+     * @param ui       The {@code Ui} instance responsible for displaying messages.
+     * @param storage  The {@code Storage} instance responsible for saving and loading task data.
+     * @throws CaviarException If the command is unrecognized or improperly formatted.
      */
     public static void parseAndExecute(String input, TaskList taskList, Ui ui, Storage storage) throws CaviarException {
         assert input != null : "Command input cannot be null";
@@ -37,6 +39,29 @@ public class Parser {
         String command = parts[0];
         String arguments = (parts.length > 1) ? parts[1] : "";
 
+        executeCommand(command, arguments, taskList, ui);
+
+        saveData(taskList, storage, ui); // Handles saving separately
+    }
+
+    /**
+     * Executes the given command based on user input.
+     * <p>
+     * This method processes the command extracted from user input and calls the appropriate
+     * handler function to execute the command.
+     * If the command is unrecognized, a {@code CaviarException} is thrown.
+     * </p>
+     *
+     * @param command   The command keyword entered by the user (e.g., "list", "mark", "todo").
+     * @param arguments The remaining user input after the command keyword (may be empty).
+     * @param taskList  The {@code TaskList} instance containing all tasks.
+     * @param ui        The {@code Ui} instance responsible for displaying messages.
+     * @throws CaviarException If the command is invalid or improperly formatted.
+     */
+    private static void executeCommand(String command,
+                                       String arguments,
+                                       TaskList taskList,
+                                       Ui ui) throws CaviarException {
         switch (command) {
         case "bye":
             handleBye(ui);
@@ -54,10 +79,10 @@ public class Parser {
         case "todo":
             handleTodo(arguments, taskList);
             break;
-        case "deadline": // NEW
+        case "deadline":
             handleDeadline(arguments, taskList);
             break;
-        case "event": // NEW
+        case "event":
             handleEvent(arguments, taskList);
             break;
         case "delete":
@@ -75,7 +100,6 @@ public class Parser {
         default:
             throw new CaviarException("I don't understand roe..?");
         }
-        saveData(taskList, storage, ui);
     }
 
     private static String handleBye(Ui ui) {

@@ -43,10 +43,10 @@ public class MainWindow extends AnchorPane {
     /**
      * Sets the Caviar instance to interact with.
      *
-     * @param c The chatbot instance.
+     * @param caviar The chatbot instance.
      */
-    public void setCaviar(Caviar c) {
-        this.caviar = c;
+    public void setCaviar(Caviar caviar) {
+        this.caviar = caviar;
     }
 
     @FXML
