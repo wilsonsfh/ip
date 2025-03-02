@@ -19,8 +19,8 @@ Choose between CLI or GUI interaction with your task manager!
 
 ## Setup
 1. Download the latest release in GitHub Open, and run the application (e.g., `java -jar Caviar.jar`).
-2. If you prefer the GUI, launch with gradle (e.g., `./gradlew run`) normally and interact with the chat window.  
-   For CLI usage, type commands into your terminal after running the `.jar` file.
+2. If you prefer the GUI, launch the jar file and interact normally with the chat window.  
+   For CLI usage, run the program in `Caviar.java` and type commands into your terminal.
 
 ---
 ## Interactions
