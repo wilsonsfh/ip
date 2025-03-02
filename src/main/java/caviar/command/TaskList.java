@@ -255,6 +255,20 @@ public class TaskList {
         };
     }
 
+    /**
+     * Sorts tasks based on their type and a specified sorting option.
+     *
+     * <p>This method filters tasks by the given type ('todo', 'deadline', or 'event') and sorts them
+     * according to the specified option. The sorting options are:
+     * <ul>
+     *   <li>1: Sort in ascending order.</li>
+     *   <li>2: Sort in descending order.</li>
+     * </ul>
+     * If the task type is invalid or the sorting option is neither 1 nor 2, an appropriate message is displayed.</p>
+     *
+     * @param type   The type of tasks to sort ('todo', 'deadline', or 'event').
+     * @param option The sorting option: 1 for ascending, 2 for descending.
+     */
     public void sortTasksByType(String type, int option) {
         if (!isValidType(type)) {
             System.out.println("Unknown task type. Use 'todo', 'deadline', or 'event'.");
@@ -265,17 +279,16 @@ public class TaskList {
             return;
         }
 
-        // 1) Collect tasks of the chosen type
+        // Store tasks of the chosen type
         List<Task> filteredTasks = filterTasksByType(type);
 
-        // 2) Sort them using the same base comparator
+        // Sort tasks using the same base comparator
         Comparator<Task> baseComparator = buildBaseComparator();
         if (option == 2) {
             baseComparator = baseComparator.reversed();
         }
         filteredTasks.sort(baseComparator);
 
-        // 3) Print them
         printFilteredTasks(filteredTasks, type, option);
     }
 

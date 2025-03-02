@@ -14,6 +14,19 @@ import caviar.ui.Ui;
  */
 public class Parser {
 
+    /**
+     * Parses the user input and executes the corresponding command.
+     *
+     * <p>This method interprets the input string to determine the command issued by the user
+     * and invokes the appropriate handler method. It supports commands such as adding tasks,
+     * marking tasks as done, listing tasks, and exiting the application.</p>
+     *
+     * @param input    The full command input entered by the user.
+     * @param taskList The current list of tasks.
+     * @param ui       The user interface instance for interacting with the user.
+     * @param storage  The storage handler for reading and writing task data.
+     * @throws CaviarException If the command is unrecognized or an error occurs during execution.
+     */
     public static void parseAndExecute(String input, TaskList taskList, Ui ui, Storage storage) throws CaviarException {
         assert input != null : "Command input cannot be null";
         assert taskList != null : "TaskList cannot be null";

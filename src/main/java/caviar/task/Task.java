@@ -93,16 +93,21 @@ public class Task {
     }
 
     private static Task createTask(String[] parts) throws CaviarException {
-        String type = parts[0], description = parts[2];
-        if ("T".equals(type)) return new Todo(description);
+        String type = parts[0];
+        String description = parts[2];
+        if ("T".equals(type)) {
+            return new Todo(description);
+        }
         if ("D".equals(type)) {
-            if (parts.length < 4)
+            if (parts.length < 4) {
                 throw new CaviarException("Invalid deadline format in storage, roe..!!");
+            }
             return new Deadline(description, parts[3]);
         }
         if ("E".equals(type)) {
-            if (parts.length < 5)
+            if (parts.length < 5) {
                 throw new CaviarException("Invalid event format in storage, roe..!!");
+            }
             return new Event(description, parts[3], parts[4]);
         }
         throw new IllegalArgumentException("Invalid task type in storage: " + type);

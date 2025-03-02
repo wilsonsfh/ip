@@ -35,7 +35,7 @@ public class Event extends Task {
             "yyyy-MM-dd HHmm",  // 2024-02-13 1800
             "yyyy-MM-dd HH:mm", // 2024-02-13 18:00
             "yyyy-MM-dd",       // 2024-02-13 (Default time 00:00)
-            "MMM d yyyy h:mm a",// Dec 2 2019 6:00 PM
+            "MMM d yyyy h:mm a", // Dec 2 2019 6:00 PM
             "yyyy/MM/dd HH:mm"  // 2019/12/02 18:00
         );
 

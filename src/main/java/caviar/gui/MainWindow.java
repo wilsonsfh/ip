@@ -1,9 +1,6 @@
 package caviar.gui;
 
 import caviar.Caviar;
-import caviar.exception.CaviarException;
-import caviar.parser.Parser;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.ScrollPane;
@@ -31,6 +28,12 @@ public class MainWindow extends AnchorPane {
     private final Image userImage = new Image(this.getClass().getResourceAsStream("/images/User.jpg"));
     private final Image caviarImage = new Image(this.getClass().getResourceAsStream("/images/Caviar.png"));
 
+    /**
+     * Initializes the controller after its root element has been completely processed.
+     *
+     * <p>This method sets up the necessary bindings between the scroll pane and the dialog container
+     * and displays a welcome message to the user upon application startup.</p>
+     */
     @FXML
     public void initialize() {
         bindScrollPaneToDialogContainer();

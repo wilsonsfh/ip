@@ -47,7 +47,7 @@ jar {
 }
 
 shadowJar {
-    archiveBaseName = "ip"
+    archiveBaseName = "Caviar"
     archiveClassifier = null
 }
 

@@ -23,6 +23,7 @@ Choose between CLI or GUI interaction with your task manager!
    For CLI usage, type commands into your terminal after running the `.jar` file.
 
 ---
+## Interactions
 
 ### 1. Adding a To-Do Task
 Creates a simple task with no date/time.
@@ -73,14 +74,17 @@ sort 1
 sort 2
 ```
 * Sort all tasks chronologically _or_ reverse-chronologically
+
 ```plaintext
 sort todo 1
 ```
 * Sort only todo tasks chronologically
+
 ```plaintext
 sort deadline 2
 ```
 * Sort only deadline tasks reverse-chronologically
+
 ```plaintext
 sort event 1
 ```
@@ -115,6 +119,5 @@ delete <task number>
 bye
 ```
 
-##
 Willing to contribute to this project? feel free to submit PRs! 
 
