@@ -17,17 +17,21 @@ repositories {
 dependencies {
     testImplementation group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.10.0'
     testRuntimeOnly group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.10.0'
-    implementation 'org.openjfx:javafx-controls:17'
-    implementation 'org.openjfx:javafx-fxml:17'
-    implementation 'org.openjfx:javafx-graphics:17'
-    implementation 'org.openjfx:javafx-media:17'
-    implementation 'org.openjfx:javafx-swing:17'
-    implementation 'org.openjfx:javafx-web:17'
-}
 
-javafx {
-    version = "17"
-    modules = ['javafx.controls', 'javafx.fxml', 'javafx.graphics', 'javafx.media', 'javafx.swing', 'javafx.web']
+    String javaFxVersion = '17.0.7'
+
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-base', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-controls', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-fxml', version: javaFxVersion, classifier: 'linux'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'win'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'mac'
+    implementation group: 'org.openjfx', name: 'javafx-graphics', version: javaFxVersion, classifier: 'linux'
 }
 
 test {
@@ -64,15 +68,6 @@ shadowJar {
         attributes(
                 'Main-Class': 'caviar.gui.Launcher'
         )
-    }
-    dependencies {
-        include(dependency('org.openjfx:javafx-controls'))
-        include(dependency('org.openjfx:javafx-fxml'))
-        include(dependency('org.openjfx:javafx-base'))
-        include(dependency('org.openjfx:javafx-graphics'))
-        include(dependency('org.openjfx:javafx-media'))
-        include(dependency('org.openjfx:javafx-swing'))
-        include(dependency('org.openjfx:javafx-web'))
     }
 }
 
